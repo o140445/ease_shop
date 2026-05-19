@@ -25,15 +25,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortOrder: 'desc',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                searchFormVisible: true,
+                search:false,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'order_no', title: __('Order_no'), operate: 'LIKE'},
                         {
-                            field: 'user.nickname',
+                            field: 'user_id',
                             title: __('User_name'),
-                            operate: false,
+                            operate: '=',
+                            addClass: 'selectpage',
+                            extend: "data-source='shop/user/index' data-field='nickname'",
                             formatter: function (value, row) {
                                 return (row.user && (row.user.nickname || row.user.username)) || row.user_id || '-';
                             }
@@ -41,10 +45,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'status', title: __('Status'), searchList: {"unpaid":__('Status unpaid'),"paid":__('Status paid'),"shipped":__('Status shipped'),"completed":__('Status completed'),"returned":__('Status returned'),"cancelled":__('Status cancelled'),"refunding":__('Status refunding'),"refunded":__('Status refunded'),"recycled":__('Status recycled')}, formatter: Table.api.formatter.status},
                         {field: 'pay_type', title: __('Pay_type'), searchList: {"balance":__('Pay_type balance')}, formatter: Table.api.formatter.normal},
                         {field: 'pay_status', title: __('Pay_status'), searchList: {"unpaid":__('Pay_status unpaid'),"paid":__('Pay_status paid'),"refunded":__('Pay_status refunded')}, formatter: Table.api.formatter.status},
-                        {field: 'freight_amount', title: __('Freight_amount'), operate:'BETWEEN'},
-                        {field: 'pay_amount', title: __('Pay_amount'), operate:'BETWEEN'},
-                        {field: 'total_quantity', title: __('Total_quantity')},
-                        {field: 'admin_remark', title: __('Admin_remark'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
+                        {field: 'freight_amount', title: __('Freight_amount'), operate: false},
+                        {field: 'pay_amount', title: __('Pay_amount'), operate:false},
+                        {field: 'total_quantity', title: __('Total_quantity'), operate:false},
+                        {field: 'admin_remark', title: __('Admin_remark'), operate: false, table: table, class: 'autocontent', formatter: Table.api.formatter.content},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {

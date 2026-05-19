@@ -25,6 +25,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortOrder: 'desc',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                searchFormVisible: true,
+                search:false,
                 columns: [
                     [
                         {checkbox: true},
@@ -32,22 +34,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'refund_no', title: __('Refund_no'), operate: 'LIKE'},
                         {field: 'order_no', title: __('Order_no'), operate: 'LIKE'},
                         {
-                            field: 'user.nickname',
+                            field: 'user_id',
                             title: __('User_name'),
-                            operate: false,
+                            operate: '=',
+                            addClass: 'selectpage',
+                            extend: "data-source='shop/user/index' data-field='nickname'",
                             formatter: function (value, row) {
                                 return (row.user && (row.user.nickname || row.user.username)) || row.user_id || '-';
                             }
                         },
-                        {field: 'product_id', title: __('Product_id')},
-                        {field: 'type', title: __('Type'), searchList: {"refund":__('Type refund'),"return_refund":__('Type return_refund')}, formatter: Table.api.formatter.normal},
-                        {field: 'reason', title: __('Reason'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'apply_money', title: __('Apply_money'), operate:'BETWEEN'},
-                        {field: 'refund_money', title: __('Refund_money'), operate:'BETWEEN'},
-                        {field: 'quantity', title: __('Quantity')},
                         {field: 'status', title: __('Status'), searchList: {"pending":__('Status pending'),"approved":__('Status approved'),"rejected":__('Status rejected'),"returned":__('Status returned'),"refunded":__('Status refunded'),"cancelled":__('Status cancelled')}, formatter: Table.api.formatter.status},
-                        {field: 'audit_remark', title: __('Audit_remark'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'refund_remark', title: __('Refund_remark'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
+
+                        // {field: 'product_id', title: __('Product_id'),  operate: false},
+                        // {field: 'type', title: __('Type'), searchList: {"refund":__('Type refund'),"return_refund":__('Type return_refund')}, formatter: Table.api.formatter.normal},
+                        // {field: 'reason', title: __('Reason'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
+                        {field: 'apply_money', title: __('Apply_money'),  operate: false},
+                        {field: 'refund_money', title: __('Refund_money'),  operate: false},
+                        {field: 'quantity', title: __('Quantity'),  operate: false},
+                        {field: 'audit_remark', title: __('Audit_remark'),table: table, class: 'autocontent', formatter: Table.api.formatter.content,  operate: false},
+                        {field: 'refund_remark', title: __('Refund_remark'), table: table, class: 'autocontent', formatter: Table.api.formatter.content,  operate: false},
                         {field: 'applytime', title: __('Applytime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'audittime', title: __('Audittime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'returntime', title: __('Returntime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

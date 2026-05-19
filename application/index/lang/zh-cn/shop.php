@@ -26,7 +26,7 @@ return [
     'Order summary' => '订单摘要',
     'Subtotal' => '小计',
     'Balance' => '余额',
-    'Currency symbol' => '$',
+    'Currency symbol' => '',
     'Checkout' => '结算',
     'Your cart is empty' => '购物车为空',
     'Checkout will be connected to balance payment in the order flow.' => '结算会在订单流程中接入余额支付。',

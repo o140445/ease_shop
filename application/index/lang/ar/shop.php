@@ -26,7 +26,7 @@ return [
     'Order summary' => 'ملخص الطلب',
     'Subtotal' => 'المجموع الفرعي',
     'Balance' => 'الرصيد',
-    'Currency symbol' => '$',
+    'Currency symbol' => '',
     'Checkout' => 'إتمام الطلب',
     'Your cart is empty' => 'سلة التسوق فارغة',
     'Checkout will be connected to balance payment in the order flow.' => 'سيتم ربط إتمام الطلب بالدفع من الرصيد ضمن مسار الطلب.',

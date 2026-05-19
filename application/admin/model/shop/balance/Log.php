@@ -32,7 +32,7 @@ class Log extends Model
     
     public function getTypeList()
     {
-        return ['recharge' => __('Type recharge'), 'pay' => __('Type pay'), 'refund' => __('Type refund'), 'recycle' => __('Type recycle'), 'withdraw' => __('Type withdraw'), 'withdraw_reject' => __('Type withdraw_reject'), 'adjust' => __('Type adjust')];
+        return ['recharge' => __('Type recharge'), 'pay' => __('Type pay'), 'refund' => __('Type refund'), 'recycle' => __('Type recycle'), 'withdraw' => __('Type withdraw'), 'withdraw_reject' => __('Type withdraw_reject'), 'freeze' => __('Type freeze'), 'unfreeze' => __('Type unfreeze'), 'adjust' => __('Type adjust')];
     }
 
 

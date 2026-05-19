@@ -25,6 +25,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortOrder: 'desc',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                searchFormVisible: true,
+                search:false,
                 columns: [
                     [
                         {checkbox: true},
@@ -32,11 +34,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'category.name', title: __('Category_name'), operate: 'LIKE'},
                         {field: 'title', title: __('Title'), operate: 'LIKE'},
                         {field: 'main_image', title: __('Main_image'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
-                        {field: 'price', title: __('Price'), operate:'BETWEEN'},
-                        {field: 'market_price', title: __('Market_price'), operate:'BETWEEN'},
-                        {field: 'cost_price', title: __('Cost_price'), operate:'BETWEEN'},
-                        {field: 'stock', title: __('Stock')},
-                        {field: 'sales', title: __('Sales')},
+                        {field: 'price', title: __('Price'), operate: false},
+                        {field: 'market_price', title: __('Market_price'),operate: false},
+                        {field: 'cost_price', title: __('Cost_price'), operate: false},
+                        {field: 'stock', title: __('Stock'), operate: false},
+                        {field: 'sales', title: __('Sales'), operate: false},
                         {field: 'is_sku', title: __('Is_sku'), searchList: {"0":__('Is_sku 0'),"1":__('Is_sku 1')}, formatter: Table.api.formatter.normal},
                         {field: 'is_recommend', title: __('Is_recommend'), searchList: {"0":__('Is_recommend 0'),"1":__('Is_recommend 1')}, formatter: Table.api.formatter.normal},
                         {field: 'is_new', title: __('Is_new'), searchList: {"0":__('Is_new 0'),"1":__('Is_new 1')}, formatter: Table.api.formatter.normal},
@@ -51,6 +53,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             table: table,
                             events: Table.api.events.operate,
                             buttons: [
+                                {
+                                    name: 'frontend',
+                                    text: __('View_frontend'),
+                                    title: __('View_frontend'),
+                                    classname: 'btn btn-xs btn-primary btn-click',
+                                    icon: 'fa fa-external-link',
+                                    click: function (data, row) {
+                                        window.open('/index/product/detail/id/' + row.id + '.html', '_blank');
+                                    }
+                                },
                                 {
                                     name: 'images',
                                     text: __('Gallery_images'),

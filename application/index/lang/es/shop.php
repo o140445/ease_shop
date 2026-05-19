@@ -26,7 +26,7 @@ return [
     'Order summary' => 'Resumen del pedido',
     'Subtotal' => 'Subtotal',
     'Balance' => 'Saldo',
-    'Currency symbol' => '$',
+    'Currency symbol' => '',
     'Checkout' => 'Pagar',
     'Your cart is empty' => 'Tu carrito está vacío',
     'Checkout will be connected to balance payment in the order flow.' => 'El pago se conectará al saldo en el flujo del pedido.',

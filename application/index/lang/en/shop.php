@@ -26,7 +26,7 @@ return [
     'Order summary' => 'Order summary',
     'Subtotal' => 'Subtotal',
     'Balance' => 'Balance',
-    'Currency symbol' => '$',
+    'Currency symbol' => '',
     'Checkout' => 'Checkout',
     'Your cart is empty' => 'Your cart is empty',
     'Checkout will be connected to balance payment in the order flow.' => 'Checkout will be connected to balance payment in the order flow.',

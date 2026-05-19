@@ -15,6 +15,10 @@ class OrderService
 
     public function getCheckoutData($user)
     {
+        $user = Db::name('shop_user')->where('id', (int)$user['id'])->where('status', 'normal')->find();
+        if (!$user) {
+            throw new \Exception(__('User does not exist'));
+        }
         $items = Db::name('shop_cart')->alias('cart')
             ->join('__SHOP_PRODUCT__ product', 'product.id=cart.product_id AND product.status="normal"', 'INNER')
             ->join('__SHOP_PRODUCT_SKU__ sku', 'sku.id=cart.sku_id', 'LEFT')
@@ -37,14 +41,15 @@ class OrderService
         }
         unset($item);
 
-        $level = $user['level_id'] ? Db::name('shop_user_level')->where('id', $user['level_id'])->find() : null;
-        $discountRate = $level ? (float)$level['discount_rate'] : 100.00;
+        $level = $user['level_id'] ? Db::name('shop_user_level')->where('id', $user['level_id'])->where('status', 'normal')->find() : null;
+        $discountRate = $level ? min(100, max(0, (float)$level['discount_rate'])) : 100.00;
+        $levelName = $level ? $level['name'] : __('Regular member');
         $levelDiscountAmount = round($productAmount * max(0, 100 - $discountRate) / 100, 2);
         $freightAmount = 0.00;
         $payAmount = max(0, round($productAmount + $freightAmount - $levelDiscountAmount, 2));
         $address = $this->getDefaultAddress($user['id']);
 
-        return compact('items', 'level', 'discountRate', 'productAmount', 'totalQuantity', 'levelDiscountAmount', 'freightAmount', 'payAmount', 'address');
+        return compact('items', 'level', 'levelName', 'discountRate', 'productAmount', 'totalQuantity', 'levelDiscountAmount', 'freightAmount', 'payAmount', 'address');
     }
 
     public function getFormattedCheckoutData($user)
@@ -60,6 +65,7 @@ class OrderService
         $data['freightAmount'] = number_format($data['freightAmount'], 2, '.', '');
         $data['levelDiscountAmount'] = number_format($data['levelDiscountAmount'], 2, '.', '');
         $data['payAmount'] = number_format($data['payAmount'], 2, '.', '');
+        $data['discountRate'] = number_format($data['discountRate'], 2, '.', '');
 
         return $data;
     }
@@ -401,11 +407,20 @@ class OrderService
             $now = time();
             $before = (float)$freshUser['money'];
             $after = round($before - (float)$order['pay_amount'], 2);
-            Db::name('shop_user')->where('id', $userId)->update([
+            $totalOrderAmount = round((float)$freshUser['total_order_amount'] + (float)$order['product_amount'], 2);
+            $totalPayAmount = round((float)$freshUser['total_pay_amount'] + (float)$order['pay_amount'], 2);
+            $totalRechargeAmount = (float)$freshUser['total_recharge_amount'];
+            $userUpdate = [
                 'money'            => number_format($after, 2, '.', ''),
-                'total_pay_amount' => Db::raw('total_pay_amount+' . (float)$order['pay_amount']),
+                'total_order_amount' => number_format($totalOrderAmount, 2, '.', ''),
+                'total_pay_amount' => number_format($totalPayAmount, 2, '.', ''),
                 'updatetime'       => $now,
-            ]);
+            ];
+            $upgradeLevel = $this->getEligibleUpgradeLevel($freshUser, $totalOrderAmount, $totalPayAmount, $totalRechargeAmount);
+            if ($upgradeLevel) {
+                $userUpdate['level_id'] = (int)$upgradeLevel['id'];
+            }
+            Db::name('shop_user')->where('id', $userId)->update($userUpdate);
             Db::name('shop_order')->where('id', $order['id'])->update([
                 'status'     => 'paid',
                 'pay_status' => 'paid',
@@ -421,6 +436,16 @@ class OrderService
                 'after'      => number_format($after, 2, '.', ''),
                 'memo'       => __('Order balance payment') . ': ' . $order['order_no'],
             ]);
+            if ($upgradeLevel) {
+                $this->financeLog->operation('member_level_upgrade', 'success', [
+                    'user_id'       => $userId,
+                    'from_level_id' => (int)$freshUser['level_id'],
+                    'to_level_id'   => (int)$upgradeLevel['id'],
+                    'to_level_name' => $upgradeLevel['name'],
+                    'order_id'      => (int)$order['id'],
+                    'order_no'      => $order['order_no'],
+                ]);
+            }
 
             Db::commit();
             $this->financeLog->operation('balance_pay', 'success', [
@@ -457,6 +482,37 @@ class OrderService
         if ($secret['password'] !== md5(md5($payPassword) . $secret['salt'])) {
             throw new \Exception(__('Payment password is incorrect'));
         }
+    }
+
+    protected function getEligibleUpgradeLevel($user, $totalOrderAmount, $totalPayAmount, $totalRechargeAmount)
+    {
+        $currentLevel = $user['level_id'] ? Db::name('shop_user_level')->where('id', (int)$user['level_id'])->find() : null;
+        $currentLevelValue = $currentLevel ? (int)$currentLevel['level'] : 0;
+        $levels = Db::name('shop_user_level')
+            ->where('status', 'normal')
+            ->order('level desc,id desc')
+            ->select();
+
+        foreach ($levels as $level) {
+            if ((int)$level['level'] <= $currentLevelValue) {
+                continue;
+            }
+            $conditions = [];
+            if ((float)$level['min_order_amount'] > 0) {
+                $conditions[] = $totalOrderAmount >= (float)$level['min_order_amount'];
+            }
+            if ((float)$level['min_pay_amount'] > 0) {
+                $conditions[] = $totalPayAmount >= (float)$level['min_pay_amount'];
+            }
+            if ((float)$level['min_recharge_amount'] > 0) {
+                $conditions[] = $totalRechargeAmount >= (float)$level['min_recharge_amount'];
+            }
+            if (!$conditions || in_array(true, $conditions, true)) {
+                return $level;
+            }
+        }
+
+        return null;
     }
 
     protected function getDefaultAddress($userId)

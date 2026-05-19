@@ -25,26 +25,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortOrder: 'desc',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                searchFormVisible: true,
+                search:false,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'order_no', title: __('Order_no'), operate: 'LIKE'},
                         {
-                            field: 'user.nickname',
+                            field: 'user_id',
                             title: __('User_name'),
-                            operate: false,
+                            operate: '=',
+                            addClass: 'selectpage',
+                            extend: "data-source='shop/user/index' data-field='nickname'",
                             formatter: function (value, row) {
                                 return (row.user && (row.user.nickname || row.user.username)) || row.user_id || '-';
                             }
                         },
-                        {field: 'order_status_text', title: __('Order_status'), operate: false},
-                        {field: 'pay_status_text', title: __('Pay_status'), operate: false},
-                        {field: 'pay_amount', title: __('Pay_amount'), operate:'BETWEEN'},
-                        {field: 'recycle_amount', title: __('Recycle_amount'), operate:'BETWEEN'},
-                        {field: 'total_quantity', title: __('Total_quantity')},
                         {field: 'status', title: __('Status'), searchList: {"pending":__('Status pending'),"approved":__('Status approved'),"rejected":__('Status rejected'),"recycled":__('Status recycled'),"restored":__('Status restored'),"deleted":__('Status deleted')}, formatter: Table.api.formatter.status},
-                        {field: 'memo', title: __('Memo'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
+
+                        // {field: 'order_status_text', title: __('Order_status'), operate: false},
+                        // {field: 'pay_status_text', title: __('Pay_status'), operate: false},
+                        {field: 'pay_amount', title: __('Pay_amount'),  operate: false},
+                        {field: 'recycle_amount', title: __('Recycle_amount'),  operate: false},
+                        {field: 'total_quantity', title: __('Total_quantity'), operate: false},
+                        {field: 'memo', title: __('Memo'),table: table, class: 'autocontent', formatter: Table.api.formatter.content, operate: false},
                         {field: 'recycletime', title: __('Recycletime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'audittime', title: __('Audittime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'restoretime', title: __('Restoretime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

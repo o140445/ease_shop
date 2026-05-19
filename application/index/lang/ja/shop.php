@@ -26,7 +26,7 @@ return [
     'Order summary' => '注文概要',
     'Subtotal' => '小計',
     'Balance' => '残高',
-    'Currency symbol' => '$',
+    'Currency symbol' => '',
     'Checkout' => '決済',
     'Your cart is empty' => 'カートは空です',
     'Checkout will be connected to balance payment in the order flow.' => '決済は注文フローで残高支払いに接続されます。',

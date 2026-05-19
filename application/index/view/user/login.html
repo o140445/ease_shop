@@ -29,11 +29,12 @@
                 <input id="password" type="password" name="password" data-rule="required;password" placeholder="{:__('Please enter password')}" autocomplete="off">
             </div>
 
+            {if $loginCaptcha}
             <div class="shop-auth-field has-captcha">
                 <i class="fa fa-picture-o"></i>
-                <input id="captcha" type="text" name="captcha" data-rule="required;length({$Think.config.captcha.length})" placeholder="{:__('Please enter captcha')}" autocomplete="off">
-                <img src="{:captcha_src()}" alt="{:__('Captcha')}" onclick="this.src='{:captcha_src()}?r='+Math.random();">
+                {include file="common/captcha" event="login" type="text" /}
             </div>
+            {/if}
 
             <div class="shop-auth-row">
                 <label><input type="checkbox" name="keeplogin" checked="checked" value="1"> {:__('Remember me')}</label>

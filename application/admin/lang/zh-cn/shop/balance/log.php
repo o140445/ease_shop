@@ -11,6 +11,8 @@ return [
     'Type recycle'         => '订单回收',
     'Type withdraw'        => '提款',
     'Type withdraw_reject' => '提款驳回',
+    'Type freeze'          => '冻结金额',
+    'Type unfreeze'        => '解冻金额',
     'Type adjust'          => '调整',
     'Order_id'             => '订单ID',
     'Order_no'             => '订单号',

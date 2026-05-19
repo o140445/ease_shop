@@ -20,7 +20,7 @@ use think\Validate;
 class User extends Frontend
 {
     protected $layout = 'default';
-    protected $noNeedLogin = ['login', 'register', 'third'];
+    protected $noNeedLogin = ['login', 'register', 'third', 'logout'];
     protected $noNeedRight = ['*'];
     protected $shopLang = 'ar';
 
@@ -146,7 +146,6 @@ class User extends Frontend
             $rule = [
                 'account'   => 'require|length:3,50',
                 'password'  => 'require|length:6,30',
-                'captcha'   => 'require|captcha',
                 '__token__' => 'require|token',
             ];
 
@@ -161,9 +160,12 @@ class User extends Frontend
             $data = [
                 'account'   => $account,
                 'password'  => $password,
-                'captcha'   => $captcha,
                 '__token__' => $token,
             ];
+            if (Config::get('fastadmin.login_captcha')) {
+                $rule['captcha'] = 'require|captcha';
+                $data['captcha'] = $captcha;
+            }
             $validate = new Validate($rule, $msg);
             $result = $validate->check($data);
             if (!$result) {
@@ -182,6 +184,7 @@ class User extends Frontend
             $url = $referer;
         }
         $this->view->assign('url', $url);
+        $this->view->assign('loginCaptcha', Config::get('fastadmin.login_captcha'));
         $this->view->assign('title', __('Login'));
         return $this->view->fetch();
     }
@@ -191,15 +194,15 @@ class User extends Frontend
      */
     public function logout()
     {
+        $auth = new ShopAuthService();
         if ($this->request->isPost()) {
             $this->token();
-            (new ShopAuthService())->logout();
+            $auth->logout();
             $this->success(__('Logout successful'), url('user/login', ['lang' => $this->shopLang]));
         }
-        $html = "<form id='logout_submit' name='logout_submit' action='' method='post'>" . token() . "<input type='submit' value='ok' style='display:none;'></form>";
-        $html .= "<script>document.forms['logout_submit'].submit();</script>";
 
-        return $html;
+        $auth->logout();
+        $this->redirect('user/login', ['lang' => $this->shopLang]);
     }
 
     /**

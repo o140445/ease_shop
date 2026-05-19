@@ -45,6 +45,7 @@ class ShopAuthService
             'mobile'       => '',
             'avatar'       => '/assets/img/avatar.png',
             'money'        => '0.00',
+            'frozen_money' => '0.00',
             'score'        => 0,
             'pay_password' => '',
             'pay_salt'     => '',
@@ -117,10 +118,21 @@ class ShopAuthService
 
     public function logout()
     {
+        $uid = (int)Cookie::get('shop_uid');
+        if ($uid > 0) {
+            Db::name('shop_user')->where('id', $uid)->update([
+                'token'      => '',
+                'updatetime' => time(),
+            ]);
+        }
+
         Cookie::delete('shop_uid');
         Cookie::delete('shop_token');
-        Cookie::delete('uid');
-        Cookie::delete('token');
+        foreach (['shop_uid', 'shop_token'] as $name) {
+            setcookie($name, '', time() - 3600, '/');
+            setcookie($name, '', time() - 3600, '/index');
+            setcookie($name, '', time() - 3600, '/admin');
+        }
     }
 
     protected function setLoginCookie($user, $expire = 0)

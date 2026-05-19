@@ -58,6 +58,7 @@
                         {/if}
                     </div>
                     <div class="shop-order-line"><span>{:__('Product quantity')}</span><strong>{$totalQuantity|htmlentities}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Member level')}</span><strong>{$levelName|htmlentities} / {$discountRate|htmlentities}%</strong></div>
                     <div class="shop-order-line"><span>{:__('Product amount')}</span><strong>{:__('Currency symbol')}{$productAmount|htmlentities}</strong></div>
                     <div class="shop-order-line"><span>{:__('Discount amount')}</span><strong>-{:__('Currency symbol')}{$levelDiscountAmount|htmlentities}</strong></div>
                     <div class="shop-order-line"><span>{:__('Freight')}</span><strong>{:__('Currency symbol')}{$freightAmount|htmlentities}</strong></div>

@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `s_shop_user` (
   `gender` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '性别:0=未知,1=男,2=女',
   `birthday` date DEFAULT NULL COMMENT '生日',
   `money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '余额',
+  `frozen_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '冻结余额',
   `score` int(10) NOT NULL DEFAULT '0' COMMENT '积分',
   `total_order_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计订单金额',
   `total_pay_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计消费金额',
@@ -228,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `s_shop_user_level` (
 CREATE TABLE IF NOT EXISTS `s_shop_balance_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `user_id` int(10) unsigned NOT NULL COMMENT '会员ID',
-  `type` enum('recharge','pay','refund','recycle','withdraw','withdraw_reject','adjust') NOT NULL DEFAULT 'adjust' COMMENT '类型:recharge=充值,pay=支付,refund=退款,recycle=订单回收,withdraw=提款,withdraw_reject=提款驳回,adjust=调整',
+  `type` enum('recharge','pay','refund','recycle','withdraw','withdraw_reject','freeze','unfreeze','adjust') NOT NULL DEFAULT 'adjust' COMMENT '类型:recharge=充值,pay=支付,refund=退款,recycle=订单回收,withdraw=提款,withdraw_reject=提款驳回,freeze=冻结金额,unfreeze=解冻金额,adjust=调整',
   `order_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单ID',
   `recharge_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '充值ID',
   `withdraw_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '提款ID',

@@ -25,11 +25,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortOrder: 'desc',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                searchFormVisible: true,
+                search:false,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'parent_id', title: __('Parent_id')},
+                        {field: 'parent_id', title: __('Parent_id'), operate: false},
                         {field: 'name', title: __('Name'), operate: 'LIKE'},
                         {field: 'status', title: __('Status'), searchList: {"normal":__('Status normal'),"hidden":__('Status hidden')}, formatter: Table.api.formatter.status},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

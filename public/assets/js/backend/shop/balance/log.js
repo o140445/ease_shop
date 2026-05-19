@@ -25,19 +25,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 sortOrder: 'desc',
                 fixedColumns: true,
                 fixedRightNumber: 1,
+                searchFormVisible: true,
+                search:false,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {
-                            field: 'user.nickname',
+                            field: 'user_id',
                             title: __('User_name'),
-                            operate: false,
+                            operate: '=',
+                            addClass: 'selectpage',
+                            extend: "data-source='shop/user/index' data-field='nickname'",
                             formatter: function (value, row) {
                                 return (row.user && (row.user.nickname || row.user.username)) || row.user_id || '-';
                             }
                         },
-                        {field: 'type', title: __('Type'), searchList: {"recharge":__('Type recharge'),"pay":__('Type pay'),"refund":__('Type refund'),"recycle":__('Type recycle'),"withdraw":__('Type withdraw'),"withdraw_reject":__('Type withdraw_reject'),"adjust":__('Type adjust')}, formatter: Table.api.formatter.normal},
+                        {field: 'type', title: __('Type'), searchList: {"recharge":__('Type recharge'),"pay":__('Type pay'),"refund":__('Type refund'),"recycle":__('Type recycle'),"withdraw":__('Type withdraw'),"withdraw_reject":__('Type withdraw_reject'),"freeze":__('Type freeze'),"unfreeze":__('Type unfreeze'),"adjust":__('Type adjust')}, formatter: Table.api.formatter.normal},
                         {
                             field: 'order.order_no',
                             title: __('Order_no'),
@@ -70,10 +74,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 return (row.refund && row.refund.refund_no) || '-';
                             }
                         },
-                        {field: 'money', title: __('Money'), operate:'BETWEEN'},
-                        {field: 'before', title: __('Before'), operate:'BETWEEN'},
-                        {field: 'after', title: __('After'), operate:'BETWEEN'},
-                        {field: 'memo', title: __('Memo'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
+                        {field: 'money', title: __('Money'), operate:false},
+                        {field: 'before', title: __('Before'), operate:false},
+                        {field: 'after', title: __('After'), operate:false},
+                        {field: 'memo', title: __('Memo'), operate: false, table: table, class: 'autocontent', formatter: Table.api.formatter.content},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]

@@ -15,6 +15,7 @@ return [
     'Content'        => '商品详情',
     'Main_image'     => '主图',
     'Gallery_images' => '商品相册',
+    'View_frontend'  => '前台查看',
     'Price'          => '销售价',
     'Market_price'   => '市场价',
     'Cost_price'     => '成本价',

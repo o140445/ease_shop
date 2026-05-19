@@ -1,0 +1,31 @@
+{php}
+    $currentShopLang = isset($shopLang) ? $shopLang : 'ar';
+    $currentCartCount = isset($cartCount) ? (int)$cartCount : 0;
+{/php}
+<header class="shop-ease-header">
+    <div class="shop-ease-container">
+        <div class="shop-ease-topbar">
+            <a href="{:url('index/index', ['lang' => $currentShopLang])}" class="shop-ease-logo" aria-label="ShopEase">
+                <span>Shop</span><b>Ease</b>
+            </a>
+
+            <form class="shop-ease-search" action="{:url('product/index')}" method="get">
+                <input type="hidden" name="lang" value="{$currentShopLang|htmlentities}">
+                <input name="keyword" type="search" placeholder="{:__('Search product, brand or category')}" aria-label="{:__('Search products')}">
+                <button type="submit" class="btn" aria-label="{:__('Search')}"><i class="fa fa-search"></i></button>
+            </form>
+
+            <nav class="shop-ease-actions" aria-label="{:__('Quick links')}">
+                <a href="{:url('cart/index', ['lang' => $currentShopLang])}" class="shop-ease-icon-link">
+                    <i class="fa fa-shopping-cart"></i>
+                    {if $currentCartCount>0}<em>{$currentCartCount}</em>{/if}
+                    <span>{:__('Cart')}</span>
+                </a>
+                <a href="{:url('center/index', ['lang' => $currentShopLang])}" class="shop-ease-icon-link">
+                    <i class="fa fa-user-o"></i>
+                    <span>{:__('Member center')}</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+</header>

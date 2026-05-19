@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-checkout-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    <main class="shop-ease-container">
+        <div class="shop-mobile-page-head">
+            <a href="{:url('cart/index', ['lang' => $shopLang])}" aria-label="{:__('Back')}"><i class="fa fa-angle-left"></i></a>
+            <h1>{:__('Confirm order')}</h1>
+            <span></span>
+        </div>
+
+        <section class="shop-order-result">
+            <div class="shop-order-state is-unpaid">
+                <i class="fa fa-clipboard"></i>
+                <div>
+                    <h1>{:__('Confirm order')}</h1>
+                    <p>{:__('Confirm products, shipping information and amount before submitting')}</p>
+                </div>
+            </div>
+
+            <div class="shop-order-layout">
+                <section class="shop-order-card">
+                    <h2>{:__('Order products')}</h2>
+                    <div class="shop-order-items">
+                        {volist name="items" id="item"}
+                        <article>
+                            <img src="{$item.main_image|cdnurl|htmlentities}" alt="{$item.title|htmlentities}">
+                            <div>
+                                <strong>{$item.title|htmlentities}</strong>
+                                {if $item.spec_json}<span>{$item.spec_json|htmlentities}</span>{/if}
+                            </div>
+                            <em>x{$item.quantity|htmlentities}</em>
+                            <b>{:__('Currency symbol')}{$item.line_total|htmlentities}</b>
+                        </article>
+                        {/volist}
+                    </div>
+                </section>
+
+                <aside class="shop-order-pay">
+                    <h2>{:__('Order confirmation')}</h2>
+                    <div class="shop-order-address">
+                        <strong>{:__('Shipping information')}</strong>
+                        {if $address}
+                        <p>{$address.consignee|htmlentities}　{$address.mobile|htmlentities}</p>
+                        <span>{$address.province|htmlentities}{$address.city|htmlentities}{$address.district|htmlentities}{$address.address|htmlentities}</span>
+                        {else /}
+                        <p>{:__('No default shipping address')}</p>
+                        <span>{:__('You can submit the order first and complete it later.')}</span>
+                        {/if}
+                    </div>
+                    <div class="shop-order-line"><span>{:__('Product quantity')}</span><strong>{$totalQuantity|htmlentities}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Product amount')}</span><strong>{:__('Currency symbol')}{$productAmount|htmlentities}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Discount amount')}</span><strong>-{:__('Currency symbol')}{$levelDiscountAmount|htmlentities}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Freight')}</span><strong>{:__('Currency symbol')}{$freightAmount|htmlentities}</strong></div>
+                    <div class="shop-order-total"><span>{:__('Payable amount')}</span><strong>{:__('Currency symbol')}{$payAmount|htmlentities}</strong></div>
+
+                    <form method="post" action="{:url('cart/checkout', ['lang' => $shopLang])}">
+                        <button type="submit" class="shop-order-paybtn">{:__('Submit order')}</button>
+                    </form>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+</body>
+</html>

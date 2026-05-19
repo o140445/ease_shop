@@ -1,0 +1,51 @@
+{php}
+    $centerCustomerUrl = !empty($site['customer']) ? $site['customer'] : 'javascript:;';
+    $centerCustomerTarget = !empty($site['customer']) ? '_blank' : '_self';
+{/php}
+<aside class="shop-center-sidebar">
+    <div class="shop-center-sidebar-user">
+        <img src="{$user.avatar|default='/assets/img/avatar.png'|cdnurl|htmlentities}" alt="{$user.nickname|default=$user.username|htmlentities}">
+        <strong>{$user.nickname|default=$user.username|htmlentities}</strong>
+        {if $level}<span>{$level.name|htmlentities}</span>{else /}<span>{:__('Regular member')}</span>{/if}
+    </div>
+    <nav>
+        <a class="{$centerActive=='center'?'active':''}" href="{:url('center/index', ['lang' => $shopLang])}">
+            <i class="fa fa-user-o"></i>
+            <span>{:__('Member center')}</span>
+        </a>
+        <a class="{$centerActive=='centerorders'?'active':''}" href="{:url('center/orders', ['lang' => $shopLang])}">
+            <i class="fa fa-list-alt"></i>
+            <span>{:__('Order list')}</span>
+        </a>
+        {volist name="centerMenuGroups" id="group"}
+        <div class="shop-center-sidebar-group {if in_array($centerActive, $group['keys'])}active{/if}">
+            <div class="shop-center-sidebar-title">
+                <i class="fa {$group.icon|htmlentities}"></i>
+                <span>{$group.title|htmlentities}</span>
+            </div>
+            <div class="shop-center-sidebar-sub">
+                {volist name="group.items" id="menu"}
+                <a class="{$centerActive==$menu.key?'active':''}" href="{$menu.url|htmlentities}">
+                    <i class="fa {$menu.icon|htmlentities}"></i>
+                    <span>{$menu.title|htmlentities}</span>
+                </a>
+                {/volist}
+            </div>
+        </div>
+        {/volist}
+        <a href="{$centerCustomerUrl|htmlentities}" target="{$centerCustomerTarget|htmlentities}" rel="noopener">
+            <i class="fa fa-comments-o"></i>
+            <span>{:__('Online service')}</span>
+        </a>
+        <a href="{:url('user/logout', ['lang' => $shopLang])}">
+            <i class="fa fa-sign-out"></i>
+            <span>{:__('Sign out')}</span>
+        </a>
+    </nav>
+</aside>
+
+<nav class="shop-center-mobile-tabs" aria-label="{:__('Member center menu')}">
+    {volist name="centerMenu" id="menu"}
+    <a class="{$centerActive==$menu.key?'active':''}" href="{$menu.url|htmlentities}">{$menu.title|htmlentities}</a>
+    {/volist}
+</nav>

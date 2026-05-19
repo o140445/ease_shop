@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'Id'                 => 'ID',
+    'Parent_id'          => '父级ID',
+    'Position'           => '位置',
+    'Position home'      => '首页',
+    'Position footer'    => '底部',
+    'Position user'      => '会员中心',
+    'Title'              => '导航标题',
+    'Icon'               => '图标',
+    'Image'              => '图片',
+    'Link_type'          => '链接类型',
+    'Link_type url'      => '链接',
+    'Link_type product'  => '商品',
+    'Link_type category' => '分类',
+    'Link_type notice'   => '公告',
+    'Link_type page'     => '页面',
+    'Link_url'           => '链接地址',
+    'Link_id'            => '关联ID',
+    'Target'             => '打开方式',
+    'Target self'        => '当前页',
+    'Target blank'       => '新窗口',
+    'Weigh'              => '权重',
+    'Status'             => '状态',
+    'Status normal'      => '正常',
+    'Set status to normal'=> '设为正常',
+    'Status hidden'      => '隐藏',
+    'Set status to hidden'=> '设为隐藏',
+    'Createtime'         => '创建时间',
+    'Updatetime'         => '更新时间',
+    'Deletetime'         => '删除时间'
+];

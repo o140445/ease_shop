@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-center-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+    <main class="shop-ease-container">
+        <div class="shop-center-shell">
+            {include file="common/shop_center_sidebar" /}
+            <section class="shop-center-content shop-center-card">
+                <div class="shop-center-page-head">
+                    <a class="shop-center-back" href="{:url('center/bank', ['lang' => $shopLang])}"><i class="fa fa-angle-left"></i></a>
+                    <div>
+                        <h1>{:__('Add bank card')}</h1>
+                    </div>
+                </div>
+                <form class="shop-center-form is-narrow" method="post" action="{:url('center/bankadd', ['lang' => $shopLang])}">
+                    <label><span>{:__('Bank name')}</span><input type="text" name="bank_name" required></label>
+                    <label><span>{:__('Account number')}</span><input type="text" name="card_no" required></label>
+                    <label><span>{:__('Name')}</span><input type="text" name="realname" required></label>
+                    <label class="shop-center-check"><input type="checkbox" name="is_default" value="1"><span>{:__('Set as default bank card')}</span></label>
+                    <button type="submit">{:__('Save bank card')}</button>
+                </form>
+            </section>
+        </div>
+    </main>
+    {include file="common/shop_footer" /}
+</div>
+{include file="common/script" /}
+</body>
+</html>

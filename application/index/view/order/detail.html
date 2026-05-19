@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-order-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    <main class="shop-ease-container">
+        <div class="shop-mobile-page-head">
+            <a href="{:url('center/orders', ['lang' => $shopLang])}" aria-label="{:__('Back')}"><i class="fa fa-angle-left"></i></a>
+            <h1>{:__('Order detail')}</h1>
+            <span></span>
+        </div>
+
+        <section class="shop-order-result">
+            <div class="shop-order-state {$order.pay_status=='paid'||$order.status=='returned'?'is-paid':'is-unpaid'}">
+                <i class="fa {$order.pay_status=='paid'||$order.status=='returned'?'fa-check':'fa-clock-o'}"></i>
+                <div>
+                    <h1>{if $order.status=='recycled'}{:__('Recycled')}{elseif $order.status=='refunding'}{:__('Return pending')}{elseif $order.status=='returned'}{:__('Returned')}{elseif $order.pay_status=='paid'}{:__('Payment successful')}{else /}{:__('Order submitted, waiting for payment')}{/if}</h1>
+                    <p>{:__('Order No.')}：{$order.order_no|htmlentities}</p>
+                </div>
+            </div>
+
+            <div class="shop-order-layout">
+                <section class="shop-order-card">
+                    <h2>{:__('Order products')}</h2>
+                    <div class="shop-order-items">
+                        {volist name="items" id="item"}
+                        <article>
+                            <img src="{$item.image|cdnurl|htmlentities}" alt="{$item.title|htmlentities}">
+                            <div>
+                                <strong>{$item.title|htmlentities}</strong>
+                                {if $item.sku_spec}<span>{$item.sku_spec|htmlentities}</span>{/if}
+                            </div>
+                            <em>x{$item.quantity|htmlentities}</em>
+                            <b>{:__('Currency symbol')}{$item.total_price|htmlentities}</b>
+                        </article>
+                        {/volist}
+                    </div>
+                </section>
+
+                <aside class="shop-order-pay">
+                    <h2>{:__('Payment information')}</h2>
+                    <div class="shop-order-line"><span>{:__('Order status')}</span><strong>{$order.pay_status=='paid'?__('Paid'):__('Pending payment')}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Product amount')}</span><strong>{:__('Currency symbol')}{$order.product_amount|htmlentities}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Discount amount')}</span><strong>-{:__('Currency symbol')}{$order.discount_amount|htmlentities}</strong></div>
+                    <div class="shop-order-line"><span>{:__('Freight')}</span><strong>{:__('Currency symbol')}{$order.freight_amount|htmlentities}</strong></div>
+                    {if $order.pay_status=='unpaid'}
+                    <div class="shop-order-total"><span>{:__('Payable amount')}</span><strong>{:__('Currency symbol')}{$order.pay_amount|htmlentities}</strong></div>
+
+                    <div class="shop-order-method">
+                        <label class="active">
+                            <input type="radio" checked name="pay_type" value="balance">
+                            <i class="fa fa-credit-card"></i>
+                            <span>{:__('Balance pay')}</span>
+                        </label>
+                        <p>{:__('Current balance')}：{:__('Currency symbol')}{$user.money|htmlentities}</p>
+                    </div>
+
+                    {if $hasPayPassword}
+                    <form method="post" action="{:url('order/pay', ['lang' => $shopLang])}" data-ajax="1">
+                        <input type="hidden" name="id" value="{$order.id}">
+                        <label class="shop-order-pay-password">
+                            <span>{:__('Payment password')}</span>
+                            <input type="password" name="pay_password" placeholder="{:__('Please enter payment password')}" autocomplete="current-password" required>
+                        </label>
+                        <button type="submit" class="shop-order-paybtn">{:__('Pay now')}</button>
+                    </form>
+                    {else /}
+                    <div class="shop-order-pay-password-tip">
+                        <i class="fa fa-shield"></i>
+                        <span>{:__('Please set payment password before paying')}</span>
+                        <a href="{:url('center/paypassword', ['url' => url('order/detail', ['id' => $order.id, 'lang' => $shopLang]), 'lang' => $shopLang])}">{:__('Set payment password')}</a>
+                    </div>
+                    {/if}
+                    {/if}
+                    {if $order.status=='shipped' && $order.pay_status=='paid'}
+                    <div class="shop-order-finished-actions">
+                        <form method="post" action="{:url('order/complete', ['lang' => $shopLang])}" data-ajax="1">
+                            <input type="hidden" name="id" value="{$order.id}">
+                            <button type="submit" class="shop-order-paybtn">{:__('Confirm receipt')}</button>
+                        </form>
+                    </div>
+                    {/if}
+                    {if $order.status=='completed' && $order.pay_status=='paid'}
+                    <div class="shop-order-finished-actions">
+                        {if !in_array($order.recycle_status, ['pending','approved','recycled'])}
+                        <form method="post" action="{:url('order/returnorder', ['lang' => $shopLang])}" data-ajax="1">
+                            <input type="hidden" name="id" value="{$order.id}">
+                            <button type="submit" class="shop-order-paybtn is-link">{:__('Return order')}</button>
+                        </form>
+                        {/if}
+                        {if $order.recycle_status=='pending'}
+                        <div class="shop-order-pay-password-tip">
+                            <i class="fa fa-clock-o"></i>
+                            <span>{:__('Recycle audit pending')}</span>
+                        </div>
+                        {else /}
+                        <form method="post" action="{:url('order/recycle', ['lang' => $shopLang])}" data-ajax="1">
+                            <input type="hidden" name="id" value="{$order.id}">
+                            <button type="submit" class="shop-order-paybtn">{:__('Recycle order')}</button>
+                        </form>
+                        {/if}
+                    </div>
+                    {/if}
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+</body>
+</html>

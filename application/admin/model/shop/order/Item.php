@@ -1,0 +1,28 @@
+<?php
+
+namespace app\admin\model\shop\order;
+
+use think\Model;
+
+
+class Item extends Model
+{
+
+    
+
+    
+
+    // 表名
+    protected $name = 'shop_order_item';
+    
+    // 自动写入时间戳字段
+    protected $autoWriteTimestamp = 'integer';
+
+    // 定义时间戳字段名
+    protected $createTime = 'createtime';
+    protected $updateTime = false;
+    protected $deleteTime = false;
+
+    // 追加属性
+    protected $append = [];
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-cart-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    <main class="shop-ease-container">
+        <div class="shop-mobile-page-head">
+            <a href="{:url('product/index', ['lang' => $shopLang])}" aria-label="{:__('Back')}"><i class="fa fa-angle-left"></i></a>
+            <h1>{:__('Cart')}</h1>
+            <span></span>
+        </div>
+
+        <section class="shop-cart-hero">
+            <div>
+                <span>Shopping Cart</span>
+                <h1>{:__('Cart')}</h1>
+                <p>{:__('Review item quantities and amounts before checkout')}</p>
+            </div>
+            <a href="{:url('product/index', ['lang' => $shopLang])}"><i class="fa fa-angle-left"></i> {:__('Continue shopping')}</a>
+        </section>
+
+        {if count($items)>0}
+        <section class="shop-cart-layout">
+            <div class="shop-cart-list">
+                {volist name="items" id="item"}
+                <article class="shop-cart-item">
+                    <a class="shop-cart-image" href="{:url('product/detail', ['id' => $item.product_id, 'lang' => $shopLang])}">
+                        <img src="{$item.main_image|cdnurl|htmlentities}" alt="{$item.title|htmlentities}">
+                    </a>
+                    <div class="shop-cart-info">
+                        <h2><a href="{:url('product/detail', ['id' => $item.product_id, 'lang' => $shopLang])}">{$item.title|htmlentities}</a></h2>
+                        {if $item.spec_json}<p>{$item.spec_json|htmlentities}</p>{/if}
+                        <strong>{:__('Currency symbol')}{$item.display_price|htmlentities}</strong>
+                    </div>
+                    <form class="shop-cart-qty" method="post" action="{:url('cart/update', ['lang' => $shopLang])}">
+                        <input type="hidden" name="id" value="{$item.id}">
+                        <button type="button" data-cart-minus>-</button>
+                        <input type="number" name="quantity" value="{$item.quantity|htmlentities}" min="1">
+                        <button type="button" data-cart-plus>+</button>
+                        <button type="submit" class="shop-cart-update">{:__('Update')}</button>
+                    </form>
+                    <div class="shop-cart-total">
+                        <span>{:__('Subtotal')}</span>
+                        <strong>{:__('Currency symbol')}{$item.line_total|htmlentities}</strong>
+                    </div>
+                    <form class="shop-cart-remove-form" method="post" action="{:url('cart/remove', ['lang' => $shopLang])}">
+                        <input type="hidden" name="id" value="{$item.id}">
+                        <button type="submit" class="shop-cart-remove" aria-label="{:__('Remove product')}"><i class="fa fa-trash-o"></i></button>
+                    </form>
+                </article>
+                {/volist}
+            </div>
+
+            <aside class="shop-cart-summary">
+                <h2>{:__('Order summary')}</h2>
+                <div class="shop-cart-summary-line">
+                    <span>{:__('Product quantity')}</span>
+                    <strong>{:array_sum(array_column($items, 'quantity'))}</strong>
+                </div>
+                <div class="shop-cart-summary-line">
+                    <span>{:__('Product amount')}</span>
+                    <strong>{:__('Currency symbol')}{$total|htmlentities}</strong>
+                </div>
+                <div class="shop-cart-summary-line">
+                    <span>{:__('Freight')}</span>
+                    <strong>{:__('Currency symbol')}0.00</strong>
+                </div>
+                <div class="shop-cart-summary-total">
+                    <span>{:__('Payable total')}</span>
+                    <strong>{:__('Currency symbol')}{$total|htmlentities}</strong>
+                </div>
+                <a href="{:url('cart/checkout', ['lang' => $shopLang])}" class="shop-cart-checkout">{:__('Checkout')}</a>
+                <p>{:__('Confirm order information in the next step. No order will be created immediately.')}</p>
+            </aside>
+        </section>
+        {else /}
+        <section class="shop-cart-empty">
+            <i class="fa fa-shopping-cart"></i>
+            <h1>{:__('Your cart is empty')}</h1>
+            <p>{:__('Pick some products you like')}</p>
+            <a href="{:url('product/index', ['lang' => $shopLang])}">{:__('Explore products')}</a>
+        </section>
+        {/if}
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+<script>
+(function () {
+    document.querySelectorAll('.shop-cart-qty').forEach(function (form) {
+        var input = form.querySelector('input[name="quantity"]');
+        var minus = form.querySelector('[data-cart-minus]');
+        var plus = form.querySelector('[data-cart-plus]');
+        function setQty(value) {
+            input.value = Math.max(1, value);
+        }
+        minus.addEventListener('click', function () {
+            setQty((parseInt(input.value, 10) || 1) - 1);
+        });
+        plus.addEventListener('click', function () {
+            setQty((parseInt(input.value, 10) || 1) + 1);
+        });
+    });
+})();
+</script>
+</body>
+</html>

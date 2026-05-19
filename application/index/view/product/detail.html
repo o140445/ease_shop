@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body bg-slate-50">
+{php}
+    $mainGalleryImage = isset($galleryImages[0]['image']) ? $galleryImages[0]['image'] : '/assets/img/logo.png';
+{/php}
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    <main class="shop-ease-container">
+        <nav class="shop-detail-breadcrumb">
+            <a href="{:url('index/index', ['lang' => $shopLang])}">{:__('Home')}</a>
+            <i class="fa fa-angle-right"></i>
+            <a href="{:url('product/index', ['category_id' => $product.category_id, 'lang' => $shopLang])}">{:__('Product list')}</a>
+            <i class="fa fa-angle-right"></i>
+            <span>{$product.title|htmlentities}</span>
+        </nav>
+
+        <section class="shop-detail-layout">
+            <div class="shop-detail-gallery">
+                <div class="shop-detail-main-image">
+                    <img id="shop-detail-main-img" src="{$mainGalleryImage|cdnurl|htmlentities}" alt="{$product.title|htmlentities}">
+                </div>
+                <div class="shop-detail-thumbs">
+                    {volist name="galleryImages" id="image" key="imageKey"}
+                    <button type="button" class="{$imageKey==1?'active':''}" data-detail-image="{$image.image|cdnurl|htmlentities}" aria-label="{:__('View image')} {$imageKey}">
+                        <img src="{$image.image|cdnurl|htmlentities}" alt="{$product.title|htmlentities}">
+                    </button>
+                    {/volist}
+                </div>
+            </div>
+
+            <section class="shop-detail-panel">
+                <div class="shop-detail-title">
+                    <span>{if $product.is_new}{:__('New')}{/if}{if $product.is_hot} {:__('Hot')}{/if}</span>
+                    <h1>{$product.title|htmlentities}</h1>
+                    {if $product.subtitle}<p>{$product.subtitle|htmlentities}</p>{/if}
+                </div>
+
+                <div class="shop-detail-price-box">
+                    <strong>{:__('Currency symbol')}{$product.display_price|htmlentities}</strong>
+                    {if $product.display_market_price}<del>{:__('Currency symbol')}{$product.display_market_price|htmlentities}</del>{/if}
+                </div>
+
+                <div class="shop-detail-meta">
+                    <div><span>{:__('Stock')}</span><strong>{$product.stock|htmlentities}</strong></div>
+                    <div><span>{:__('Sales')}</span><strong>{$product.sales|htmlentities}</strong></div>
+                </div>
+
+                <form class="shop-detail-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                    <input type="hidden" name="product_id" value="{$product.id}">
+
+                    {if count($skus)>0}
+                    <div class="shop-detail-skus">
+                        <label>{:__('Specifications')}</label>
+                        <div>
+                            {volist name="skus" id="sku" key="skuKey"}
+                            <label class="shop-detail-sku {$skuKey==1?'active':''}">
+                                <input type="radio" name="sku_id" value="{$sku.id}" {$skuKey==1?'checked':''}>
+                                <span>{if $sku.spec_json}{$sku.spec_json|htmlentities}{else/}{:__('Default')}{/if}</span>
+                            </label>
+                            {/volist}
+                        </div>
+                    </div>
+                    {/if}
+
+                    <div class="shop-detail-qty">
+                        <label for="detail-quantity">{:__('Quantity')}</label>
+                        <div>
+                            <button type="button" data-qty-minus>-</button>
+                            <input id="detail-quantity" type="number" name="quantity" value="1" min="1" max="{$product.stock|htmlentities}">
+                            <button type="button" data-qty-plus>+</button>
+                        </div>
+                    </div>
+
+                    <div class="shop-detail-actions">
+                        <button type="submit" class="shop-detail-primary"><i class="fa fa-shopping-cart"></i> {:__('Add to cart')}</button>
+                        <a href="{:url('cart/index', ['lang' => $shopLang])}" class="shop-detail-secondary">{:__('View cart')}</a>
+                    </div>
+                </form>
+            </section>
+        </section>
+
+        <section class="shop-detail-content">
+            <h2>{:__('Product details')}</h2>
+            <div class="shop-detail-richtext">
+                {$product.content}
+            </div>
+        </section>
+
+        {if count($related)>0}
+        <section class="shop-ease-section">
+            <div class="shop-ease-section-head">
+                <h2>{:__('Related products')}</h2>
+                <a href="{:url('product/index', ['category_id' => $product.category_id, 'lang' => $shopLang])}">{:__('View more')} <i class="fa fa-angle-right"></i></a>
+            </div>
+            <div class="shop-list-grid shop-detail-related">
+                {volist name="related" id="item"}
+                <article class="shop-list-card">
+                    <a href="{:url('product/detail', ['id' => $item.id, 'lang' => $shopLang])}" class="shop-list-image">
+                        <img src="{$item.main_image|cdnurl|htmlentities}" alt="{$item.title|htmlentities}">
+                    </a>
+                    <div class="shop-list-info">
+                        <h3><a href="{:url('product/detail', ['id' => $item.id, 'lang' => $shopLang])}">{$item.title|htmlentities}</a></h3>
+                        {if $item.subtitle}<p>{$item.subtitle|htmlentities}</p>{/if}
+                        <div class="shop-list-price">
+                            <strong>{:__('Currency symbol')}{$item.display_price|htmlentities}</strong>
+                            {if $item.display_market_price}<del>{:__('Currency symbol')}{$item.display_market_price|htmlentities}</del>{/if}
+                            <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                                <input type="hidden" name="product_id" value="{$item.id}">
+                                <button type="submit" aria-label="{:__('Add to cart')}"><i class="fa fa-shopping-cart"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+                {/volist}
+            </div>
+        </section>
+        {/if}
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+<script>
+(function () {
+    var mainImage = document.getElementById('shop-detail-main-img');
+    var thumbs = document.querySelectorAll('[data-detail-image]');
+    thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            thumbs.forEach(function (item) { item.classList.remove('active'); });
+            thumb.classList.add('active');
+            if (mainImage) {
+                mainImage.src = thumb.getAttribute('data-detail-image');
+            }
+        });
+    });
+
+    var qty = document.getElementById('detail-quantity');
+    var minus = document.querySelector('[data-qty-minus]');
+    var plus = document.querySelector('[data-qty-plus]');
+    function clamp(value) {
+        var min = parseInt(qty.getAttribute('min'), 10) || 1;
+        var max = parseInt(qty.getAttribute('max'), 10) || 9999;
+        return Math.max(min, Math.min(max, value));
+    }
+    if (qty && minus && plus) {
+        minus.addEventListener('click', function () {
+            qty.value = clamp((parseInt(qty.value, 10) || 1) - 1);
+        });
+        plus.addEventListener('click', function () {
+            qty.value = clamp((parseInt(qty.value, 10) || 1) + 1);
+        });
+    }
+
+    document.querySelectorAll('.shop-detail-sku input').forEach(function (input) {
+        input.addEventListener('change', function () {
+            document.querySelectorAll('.shop-detail-sku').forEach(function (item) { item.classList.remove('active'); });
+            input.closest('.shop-detail-sku').classList.add('active');
+        });
+    });
+})();
+</script>
+</body>
+</html>

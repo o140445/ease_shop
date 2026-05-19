@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-center-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    {php}
+        $profileName = !empty($user['nickname']) ? $user['nickname'] : $user['username'];
+        $profileAvatar = !empty($user['avatar']) ? $user['avatar'] : '/assets/img/avatar.png';
+        $levelName = $level ? $level['name'] : __('Regular member');
+        $addressCount = count($addresses);
+        $bankCount = count($banks);
+        $customerUrl = !empty($site['customer']) ? $site['customer'] : 'javascript:;';
+        $customerTarget = !empty($site['customer']) ? '_blank' : '_self';
+    {/php}
+    <main class="shop-ease-container">
+        <section class="shop-center-mobile-home">
+            <div class="shop-center-mobile-hero">
+                <h1>{:__('Member center')}</h1>
+                <div class="shop-center-mobile-user">
+                    <img src="{$profileAvatar|cdnurl|htmlentities}" alt="{$profileName|htmlentities}">
+                    <div>
+                        <strong>{$profileName|htmlentities}</strong>
+                        <span>{$levelName|htmlentities}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="shop-center-mobile-assets">
+                <div><a href="{:url('center/wallet', ['lang' => $shopLang])}"><strong>{:__('Currency symbol')}{$user.money|default='0.00'|htmlentities}</strong><span>{:__('Account balance')}</span></a></div>
+                <div><strong>{$user.score|default='0'|htmlentities}</strong><span>{:__('Score')}</span></div>
+                <div><a href="{:url('cart/index', ['lang' => $shopLang])}"><strong>{$cartCount|default='0'|htmlentities}</strong><span>{:__('Cart')}</span></a></div>
+            </div>
+            <section class="shop-center-mobile-orders">
+                <div>
+                    <h2>{:__('My orders')}</h2>
+                    <a href="{:url('center/orders', ['lang' => $shopLang])}">{:__('View more orders')} <i class="fa fa-angle-right"></i></a>
+                </div>
+                <div class="shop-center-mobile-order-grid">
+                    <a href="{:url('center/orders', ['status' => 'unpaid', 'lang' => $shopLang])}">
+                        <i class="fa fa-credit-card"></i>
+                        {if $orderStats.unpaid>0}<em>{$orderStats.unpaid}</em>{/if}
+                        <span>{:__('Pending payment')}</span>
+                    </a>
+                    <a href="{:url('center/orders', ['status' => 'paid', 'lang' => $shopLang])}">
+                        <i class="fa fa-archive"></i>
+                        <span>{:__('Pending shipment')}</span>
+                    </a>
+                    <a href="{:url('center/orders', ['status' => 'shipped', 'lang' => $shopLang])}">
+                        <i class="fa fa-truck"></i>
+                        <span>{:__('Pending receipt')}</span>
+                    </a>
+                    <a href="{:url('center/orders', ['status' => 'completed', 'lang' => $shopLang])}">
+                        <i class="fa fa-heart"></i>
+                        <span>{:__('Completed')}</span>
+                    </a>
+                    <a href="{:url('center/orders', ['lang' => $shopLang])}">
+                        <i class="fa fa-refresh"></i>
+                        <span>{:__('Refund/After-sales')}</span>
+                    </a>
+                    <a href="{:url('center/orders', ['status' => 'recycled', 'lang' => $shopLang])}">
+                        <i class="fa fa-recycle"></i>
+                        {if $orderStats.recycled>0}<em>{$orderStats.recycled}</em>{/if}
+                        <span>{:__('Recycled')}</span>
+                    </a>
+                </div>
+            </section>
+            <section class="shop-center-mobile-grid">
+                <a href="{:url('center/address', ['lang' => $shopLang])}"><i class="fa fa-map-marker is-yellow"></i><span>{:__('Shipping address')}</span></a>
+                <a href="{:url('center/account', ['lang' => $shopLang])}"><i class="fa fa-cog is-green"></i><span>{:__('Account settings')}</span></a>
+                <a href="{$customerUrl|htmlentities}" target="{$customerTarget|htmlentities}" rel="noopener"><i class="fa fa-users is-amber"></i><span>{:__('Online service')}</span></a>
+                <a href="{:url('user/logout', ['lang' => $shopLang])}"><i class="fa fa-sign-out is-red"></i><span>{:__('Sign out')}</span></a>
+            </section>
+        </section>
+
+        <div class="shop-center-shell">
+            {include file="common/shop_center_sidebar" /}
+            <div class="shop-center-content">
+                <section class="shop-center-hero">
+                    <div class="shop-center-profile">
+                        <img src="{$profileAvatar|cdnurl|htmlentities}" alt="{$profileName|htmlentities}">
+                        <div>
+                            <span>{:__('Member center')}</span>
+                            <h1>{$profileName|htmlentities}</h1>
+                            <p>{$levelName|htmlentities}</p>
+                        </div>
+                    </div>
+                    <div class="shop-center-assets">
+                        <div>
+                            <span>{:__('Account balance')}</span>
+                            <strong>{:__('Currency symbol')}{$user.money|default='0.00'|htmlentities}</strong>
+                        </div>
+                        <div>
+                            <span>{:__('Score')}</span>
+                            <strong>{$user.score|default='0'|htmlentities}</strong>
+                        </div>
+                        <div>
+                            <span>{:__('Total spending')}</span>
+                            <strong>{:__('Currency symbol')}{$user.total_pay_amount|default='0.00'|htmlentities}</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="shop-center-card" id="center-orders">
+                    <div class="shop-center-card-head">
+                        <h2>{:__('Recent orders')}</h2>
+                        <a href="{:url('center/orders', ['lang' => $shopLang])}">{:__('View all')} <i class="fa fa-angle-right"></i></a>
+                    </div>
+                    {if count($orders)>0}
+                    <div class="shop-center-orders">
+                        {volist name="orders" id="order"}
+                        <article class="shop-center-order">
+                            <div class="shop-center-order-top">
+                                <div>
+                                    <strong>{$order.order_no|htmlentities}</strong>
+                                    <span>{$order.createtime|date="Y-m-d H:i",###}</span>
+                                </div>
+                                <em class="{$order.pay_status=='unpaid'?'is-wait':'is-done'}">
+                                    {if $order.pay_status=='unpaid'}{:__('Pending payment')}{elseif $order.status=='recycled'}{:__('Recycled')}{elseif $order.status=='refunding'}{:__('Return pending')}{elseif $order.status=='returned'}{:__('Returned')}{elseif $order.status=='completed'}{:__('Completed')}{elseif $order.status=='shipped'}{:__('Pending receipt')}{elseif $order.status=='cancelled'}{:__('Cancelled')}{else /}{:__('Pending shipment')}{/if}
+                                </em>
+                            </div>
+                            <div class="shop-center-order-meta">
+                                <span>{:__('Product quantity')}：{$order.total_quantity|htmlentities}</span>
+                                <span>{:__('Payment method')}：{:__('Balance pay')}</span>
+                                <strong>{:__('Currency symbol')}{$order.pay_amount|htmlentities}</strong>
+                            </div>
+                            <div class="shop-center-order-actions">
+                                <a href="{:url('order/detail', ['id' => $order.id, 'lang' => $shopLang])}">
+                                    {$order.pay_status=='unpaid'?__('Pay now'):__('View order')}
+                                </a>
+                                {if $order.status=='shipped' && $order.pay_status=='paid'}
+                                <form method="post" action="{:url('order/complete', ['lang' => $shopLang])}">
+                                    <input type="hidden" name="id" value="{$order.id}">
+                                    <button type="submit">{:__('Confirm receipt')}</button>
+                                </form>
+                                {/if}
+                                {if $order.status=='completed' && $order.pay_status=='paid'}
+                                {if !in_array($order.recycle_status, ['pending','approved','recycled'])}
+                                <form method="post" action="{:url('order/returnorder', ['lang' => $shopLang])}">
+                                    <input type="hidden" name="id" value="{$order.id}">
+                                    <button type="submit">{:__('Return order')}</button>
+                                </form>
+                                {/if}
+                                {if $order.recycle_status=='pending'}
+                                <span>{:__('Recycle audit pending')}</span>
+                                {else /}
+                                <form method="post" action="{:url('order/recycle', ['lang' => $shopLang])}">
+                                    <input type="hidden" name="id" value="{$order.id}">
+                                    <button type="submit">{:__('Recycle order')}</button>
+                                </form>
+                                {/if}
+                                {/if}
+                            </div>
+                        </article>
+                        {/volist}
+                    </div>
+                    {else /}
+                    <div class="shop-center-empty">
+                        <i class="fa fa-file-text-o"></i>
+                        <strong>{:__('No orders yet')}</strong>
+                        <p>{:__('Pick products you like and create your first order.')}</p>
+                    </div>
+                    {/if}
+                </section>
+            </div>
+        </div>
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+</body>
+</html>

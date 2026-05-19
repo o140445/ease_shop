@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'Id'                    => 'ID',
+    'Delivery_no'           => '发货单号',
+    'Order_id'              => '订单ID',
+    'Order_no'              => '订单号',
+    'User_id'               => '会员ID',
+    'Delivery_type'         => '发货方式',
+    'Delivery_type express' => '物流',
+    'Delivery_type manual'  => '无需物流',
+    'Delivery_type virtual' => '虚拟发货',
+    'Express_company'       => '物流公司',
+    'Express_no'            => '物流单号',
+    'Receiver_name'         => '收货人快照',
+    'Receiver_mobile'       => '收货电话快照',
+    'Receiver_address'      => '收货地址快照',
+    'Remark'                => '发货备注',
+    'Admin_id'              => '发货管理员ID',
+    'Status'                => '状态',
+    'Status shipped'        => '已发货',
+    'Set status to shipped' => '设为已发货',
+    'Status received'       => '已收货',
+    'Set status to received'=> '设为已收货',
+    'Status cancelled'      => '已取消',
+    'Set status to cancelled'=> '设为已取消',
+    'Shiptime'              => '发货时间',
+    'Receivetime'           => '收货时间',
+    'Createtime'            => '创建时间',
+    'Updatetime'            => '更新时间'
+];

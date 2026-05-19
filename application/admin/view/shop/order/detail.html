@@ -1,0 +1,210 @@
+<style>
+    .shop-order-detail {
+        padding: 15px;
+        background: #f7f8fa;
+    }
+    .shop-order-detail .detail-section {
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #fff;
+        border: 1px solid #e5e9ef;
+        border-radius: 4px;
+    }
+    .shop-order-detail .detail-title {
+        margin: 0 0 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #edf0f5;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    .shop-order-detail .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 24px;
+    }
+    .shop-order-detail .detail-item {
+        display: flex;
+        min-width: 0;
+        line-height: 22px;
+    }
+    .shop-order-detail .detail-label {
+        flex: 0 0 110px;
+        color: #6b7280;
+    }
+    .shop-order-detail .detail-value {
+        min-width: 0;
+        color: #1f2937;
+        word-break: break-word;
+    }
+    .shop-order-detail .order-product {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 220px;
+    }
+    .shop-order-detail .order-product img {
+        width: 46px;
+        height: 46px;
+        object-fit: cover;
+        border: 1px solid #edf0f5;
+        border-radius: 4px;
+        background: #fff;
+    }
+    .shop-order-detail .order-product-title {
+        font-weight: 600;
+        color: #1f2937;
+    }
+    .shop-order-detail .order-product-spec {
+        margin-top: 4px;
+        color: #6b7280;
+        font-size: 12px;
+    }
+    .shop-order-detail .table {
+        margin-bottom: 0;
+        background: #fff;
+    }
+    @media (max-width: 767px) {
+        .shop-order-detail .detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="shop-order-detail">
+    <div class="detail-section">
+        <h4 class="detail-title">{:__('Order info')}</h4>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">{:__('Order_no')}</span>
+                <span class="detail-value">{$row.order_no|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('User_id')}</span>
+                <span class="detail-value">{$row.user_id|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Status')}</span>
+                <span class="detail-value">{$row.status_text|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Order time')}</span>
+                <span class="detail-value">{:$row.createtime?datetime($row.createtime):'-'}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Total_quantity')}</span>
+                <span class="detail-value">{$row.total_quantity|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Level_name')}</span>
+                <span class="detail-value">{$row.level_name|default='-'|htmlentities}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h4 class="detail-title">{:__('Payment info')}</h4>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">{:__('Pay_type')}</span>
+                <span class="detail-value">{$row.pay_type_text|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Pay_status')}</span>
+                <span class="detail-value">{$row.pay_status_text|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Product_amount')}</span>
+                <span class="detail-value">{$row.product_amount|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Freight_amount')}</span>
+                <span class="detail-value">{$row.freight_amount|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Discount_amount')}</span>
+                <span class="detail-value">{$row.discount_amount|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Pay_amount')}</span>
+                <span class="detail-value">{$row.pay_amount|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Paidtime')}</span>
+                <span class="detail-value">{:$row.paidtime?datetime($row.paidtime):'-'}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h4 class="detail-title">{:__('Receiver info')}</h4>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="detail-label">{:__('Receiver_name')}</span>
+                <span class="detail-value">{$row.receiver_name|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Receiver_mobile')}</span>
+                <span class="detail-value">{$row.receiver_mobile|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Receiver_address')}</span>
+                <span class="detail-value">{$row.receiver_country|htmlentities} {$row.receiver_province|htmlentities} {$row.receiver_city|htmlentities} {$row.receiver_district|htmlentities} {$row.receiver_address|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Receiver_postal_code')}</span>
+                <span class="detail-value">{$row.receiver_postal_code|default='-'|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Remark')}</span>
+                <span class="detail-value">{$row.remark|default='-'|htmlentities}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">{:__('Admin_remark')}</span>
+                <span class="detail-value">{$row.admin_remark|default='-'|htmlentities}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-section">
+        <h4 class="detail-title">{:__('Product items')}</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>{:__('Title')}</th>
+                    <th>{:__('Price')}</th>
+                    <th>{:__('Quantity')}</th>
+                    <th>{:__('Total_price')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach name="items" item="item"}
+                <tr>
+                    <td>
+                        <div class="order-product">
+                            {if $item.image}
+                            <img src="{$item.image|htmlentities}" alt="">
+                            {/if}
+                            <div>
+                                <div class="order-product-title">{$item.title|htmlentities}</div>
+                                {if $item.sku_spec}
+                                <div class="order-product-spec">{$item.sku_spec|htmlentities}</div>
+                                {/if}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{$item.price|htmlentities}</td>
+                    <td>{$item.quantity|htmlentities}</td>
+                    <td>{$item.total_price|htmlentities}</td>
+                </tr>
+                {/foreach}
+                {if !$items}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">{:__('No Results were found')}</td>
+                </tr>
+                {/if}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

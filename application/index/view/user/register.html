@@ -1,0 +1,48 @@
+<section class="shop-auth-wrap">
+    <div class="shop-auth-side hidden-xs hidden-sm">
+        <h1>{:__('Join')} <span>ShopEase</span></h1>
+        <p>{:__('Create an account and discover more selected goods')}</p>
+        <div class="shop-auth-benefits">
+            <div><i class="fa fa-shield"></i><strong>{:__('Authentic guarantee')}</strong><span>{:__('100% authentic products')}</span></div>
+            <div><i class="fa fa-truck"></i><strong>{:__('Fast delivery')}</strong><span>{:__('Multi-warehouse direct shipping')}</span></div>
+            <div><i class="fa fa-headphones"></i><strong>{:__('Thoughtful service')}</strong><span>{:__('Worry-free after-sales service')}</span></div>
+        </div>
+    </div>
+
+    <div class="shop-auth-card">
+        <div class="shop-auth-tabs">
+            <a href="{:url('user/login', ['lang' => $shopLang])}?url={$url|urlencode|htmlentities}">{:__('Sign in')}</a>
+            <a class="active" href="{:url('user/register', ['lang' => $shopLang])}?url={$url|urlencode|htmlentities}">{:__('Sign up')}</a>
+        </div>
+
+        <form name="form1" id="register-form" class="shop-auth-form" method="POST" action="">
+            <input type="hidden" name="invite_user_id" value="0"/>
+            <input type="hidden" name="url" value="{$url|htmlentities}"/>
+            {:token()}
+
+            <div class="shop-auth-field">
+                <i class="fa fa-user-o"></i>
+                <input type="text" id="username" name="username" data-rule="required;username" placeholder="{:__('Please enter username')}">
+            </div>
+
+            <div class="shop-auth-field">
+                <i class="fa fa-lock"></i>
+                <input type="password" id="password" name="password" data-rule="required;password" placeholder="{:__('Please enter password')}">
+            </div>
+
+            <div class="shop-auth-field">
+                <i class="fa fa-ticket"></i>
+                <input type="text" id="invite_code" name="invite_code" placeholder="{:__('Invitation code optional')}">
+            </div>
+
+            {if $captchaType}
+            <div class="shop-auth-field has-captcha">
+                <i class="fa fa-picture-o"></i>
+                {include file="common/captcha" event="register" type="$captchaType" /}
+            </div>
+            {/if}
+
+            <button type="submit" class="shop-auth-submit">{:__('Sign up')}</button>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,21 @@
+{php}
+    $currentShopLang = isset($shopLang) ? $shopLang : 'ar';
+    $currentCartCount = isset($cartCount) ? (int)$cartCount : 0;
+    $currentController = strtolower(request()->controller());
+    $currentAction = strtolower(request()->action());
+    $isCenterAction = $currentController == 'center';
+{/php}
+<footer class="shop-ease-footer hidden-xs">
+    Copyright © 2026 All Rights Reserved
+</footer>
+
+<nav class="shop-ease-bottom-nav visible-xs" aria-label="{:__('Bottom navigation')}">
+    <a class="{$currentController=='index'&&$currentAction=='index'?'active':''}" href="{:url('index/index', ['lang' => $currentShopLang])}"><i class="fa fa-home"></i><span>{:__('Home')}</span></a>
+    <a class="{$currentController=='product'?'active':''}" href="{:url('product/index', ['lang' => $currentShopLang])}"><i class="fa fa-th-large"></i><span>{:__('Categories')}</span></a>
+    <a class="{$currentController=='cart'?'active':''}" href="{:url('cart/index', ['lang' => $currentShopLang])}">
+        <i class="fa fa-shopping-cart"></i>
+        {if $currentCartCount>0}<em>{$currentCartCount}</em>{/if}
+        <span>{:__('Cart')}</span>
+    </a>
+    <a class="{$isCenterAction?'active':''}" href="{:url('center/index', ['lang' => $currentShopLang])}"><i class="fa fa-user-o"></i><span>{:__('My')}</span></a>
+</nav>

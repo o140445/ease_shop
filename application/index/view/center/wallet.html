@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-center-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+    {php}
+        $walletCustomerUrl = !empty($site['customer']) ? $site['customer'] : 'javascript:;';
+    {/php}
+    <main class="shop-ease-container">
+        <div class="shop-center-shell">
+            {include file="common/shop_center_sidebar" /}
+            <div class="shop-center-content">
+                <div class="shop-wallet-mobile">
+                    {if $walletTab == 'overview'}
+                    <section class="shop-wallet-mobile-panel">
+                        <div class="shop-wallet-mobile-head">
+                            <a href="{:url('center/index', ['lang' => $shopLang])}" aria-label="{:__('Back')}"><i class="fa fa-angle-left"></i></a>
+                            <h1>{:__('Account balance')}</h1>
+                        </div>
+                        <div class="shop-wallet-balance-hero">
+                            <div class="shop-wallet-coin">{:__('Currency symbol')}</div>
+                            <span>{:__('Account balance')}</span>
+                            <strong>{:__('Currency symbol')}{$user.money|htmlentities}</strong>
+                        </div>
+                        <div class="shop-wallet-action-list">
+                            <a href="{:url('center/wallet', ['wallet_tab' => 'recharge', 'lang' => $shopLang])}">
+                                <i class="fa fa-credit-card"></i>
+                                <span>{:__('Recharge')}</span>
+                                <b class="fa fa-angle-right"></b>
+                            </a>
+                            <a href="{:url('center/wallet', ['wallet_tab' => 'withdraw', 'lang' => $shopLang])}">
+                                <i class="fa fa-money"></i>
+                                <span>{:__('Withdraw')}</span>
+                                <b class="fa fa-angle-right"></b>
+                            </a>
+                        </div>
+                    </section>
+                    {/if}
+
+                    {if $walletTab == 'recharge' || $walletTab == 'recharge_record'}
+                    <section class="shop-wallet-mobile-panel">
+                        <div class="shop-wallet-mobile-head">
+                            <a href="{:url('center/wallet', ['lang' => $shopLang])}" aria-label="{:__('Back')}"><i class="fa fa-angle-left"></i></a>
+                            <h1>{:__('Recharge management')}</h1>
+                        </div>
+                        <div class="shop-wallet-tabs">
+                            <a class="{if $walletTab == 'recharge'}active{/if}" href="{:url('center/wallet', ['wallet_tab' => 'recharge', 'lang' => $shopLang])}">{:__('Recharge account')}</a>
+                            <a class="{if $walletTab == 'recharge_record'}active{/if}" href="{:url('center/wallet', ['wallet_tab' => 'recharge_record', 'lang' => $shopLang])}">{:__('Recharge records')}</a>
+                        </div>
+                        {if $walletTab == 'recharge'}
+                        <form class="shop-wallet-mobile-form" method="post" action="{:url('center/wallet', ['lang' => $shopLang])}" data-no-ajax="1" data-recharge-customer="1" data-customer-url="{$walletCustomerUrl|htmlentities}">
+                            <input type="hidden" name="action" value="recharge">
+                            <div class="shop-wallet-line">
+                                <span>{:__('Account balance')}</span>
+                                <strong>{:__('Currency symbol')}{$user.money|htmlentities}</strong>
+                            </div>
+                            <label>
+                                <span>{:__('Recharge amount')}</span>
+                                <input type="number" step="0.01" min="0.01" name="money" placeholder="{:__('Please enter recharge amount')}" required>
+                            </label>
+                            <label>
+                                <span>{:__('Recharge voucher')}</span>
+                                <input type="text" name="voucher" placeholder="{:__('Transfer number or voucher link optional')}">
+                            </label>
+                            <button type="submit">{:__('Submit')}</button>
+                        </form>
+                        {else /}
+                        <div class="shop-wallet-mobile-records">
+                            {if count($recharges)>0}
+                            {volist name="recharges" id="recharge"}
+                            <article>
+                                <strong>{:__('Currency symbol')}{$recharge.money|htmlentities}</strong>
+                                <span>{$recharge.recharge_no|htmlentities}</span>
+                                <em>{$recharge.pay_status|htmlentities}</em>
+                            </article>
+                            {/volist}
+                            {else /}
+                            <p>{:__('No recharge records')}</p>
+                            {/if}
+                        </div>
+                        {/if}
+                    </section>
+                    {/if}
+
+                    {if $walletTab == 'withdraw' || $walletTab == 'withdraw_record'}
+                    <section class="shop-wallet-mobile-panel">
+                        <div class="shop-wallet-mobile-head">
+                            <a href="{:url('center/wallet', ['lang' => $shopLang])}" aria-label="{:__('Back')}"><i class="fa fa-angle-left"></i></a>
+                            <h1>{:__('Withdraw management')}</h1>
+                        </div>
+                        <div class="shop-wallet-tabs">
+                            <a class="{if $walletTab == 'withdraw'}active{/if}" href="{:url('center/wallet', ['wallet_tab' => 'withdraw', 'lang' => $shopLang])}">{:__('Withdraw request')}</a>
+                            <a class="{if $walletTab == 'withdraw_record'}active{/if}" href="{:url('center/wallet', ['wallet_tab' => 'withdraw_record', 'lang' => $shopLang])}">{:__('Withdraw records')}</a>
+                        </div>
+                        {if $walletTab == 'withdraw'}
+                        <form class="shop-wallet-mobile-form" method="post" action="{:url('center/wallet', ['lang' => $shopLang])}">
+                            <input type="hidden" name="action" value="withdraw">
+                            <div class="shop-wallet-line">
+                                <span>{:__('Account balance')}:</span>
+                                <strong>{:__('Currency symbol')}{$user.money|htmlentities}</strong>
+                            </div>
+                            <label>
+                                <span>{:__('Withdraw bank card')}:</span>
+                                <select name="bank_id" required>
+                                    <option value="">{:__('Please select withdraw bank card')}</option>
+                                    {volist name="banks" id="bank"}
+                                    <option value="{$bank.id}">{$bank.bank_name|htmlentities} - {$bank.card_no|htmlentities}</option>
+                                    {/volist}
+                                </select>
+                            </label>
+                            <label>
+                                <span>{:__('Withdraw amount')}:</span>
+                                <input type="number" step="0.01" min="0.01" name="money" required>
+                            </label>
+                            <div class="shop-wallet-line">
+                                <span>{:__('Service fee')}:</span>
+                                <strong>0</strong>
+                            </div>
+                            <button type="submit">{:__('Submit')}</button>
+                        </form>
+                        {else /}
+                        <div class="shop-wallet-mobile-records">
+                            {if count($withdraws)>0}
+                            {volist name="withdraws" id="withdraw"}
+                            <article>
+                                <strong>{:__('Currency symbol')}{$withdraw.money|htmlentities}</strong>
+                                <span>{$withdraw.withdraw_no|htmlentities}</span>
+                                <em>{$withdraw.status|htmlentities}</em>
+                            </article>
+                            {/volist}
+                            {else /}
+                            <p>{:__('No withdraw records')}</p>
+                            {/if}
+                        </div>
+                        {/if}
+                    </section>
+                    {/if}
+                </div>
+
+                <section class="shop-center-card shop-wallet-desktop">
+                    <div class="shop-center-page-head">
+                        <a class="shop-center-back" href="{:url('center/index', ['lang' => $shopLang])}"><i class="fa fa-angle-left"></i></a>
+                        <div>
+                            <h1>{if $walletTab == 'withdraw'}{:__('Withdraw')}{else /}{:__('Recharge')}{/if}</h1>
+                        </div>
+                    </div>
+                    <div class="shop-wallet-desktop-summary">
+                        <div>
+                            <i class="fa fa-credit-card"></i>
+                            <span>{:__('Account balance')}</span>
+                        </div>
+                        <strong>{:__('Currency symbol')}{$user.money|htmlentities}</strong>
+                    </div>
+
+                    {if $walletTab == 'withdraw'}
+                    <div class="shop-wallet-desktop-board">
+                        <div class="shop-center-card-head">
+                            <h2>{:__('Withdraw records')}</h2>
+                            <a href="javascript:;" data-shop-wallet-toggle="wallet-withdraw-form"><i class="fa fa-plus"></i> {:__('Add withdraw')}</a>
+                        </div>
+                        <div class="shop-center-record-list">
+                            {if count($withdraws)>0}
+                            {volist name="withdraws" id="withdraw"}
+                            <div>
+                                <strong>{:__('Currency symbol')}{$withdraw.money|htmlentities}</strong>
+                                <span>{$withdraw.withdraw_no|htmlentities}</span>
+                                <em>{$withdraw.status|htmlentities}</em>
+                                <time>{$withdraw.createtime|date="Y-m-d H:i",###}</time>
+                            </div>
+                            {/volist}
+                            {else /}
+                            <p class="shop-center-muted">{:__('No withdraw records')}</p>
+                            {/if}
+                        </div>
+                    </div>
+                    <form id="wallet-withdraw-form" class="shop-center-form is-narrow shop-wallet-desktop-form shop-wallet-form-hidden" method="post" action="{:url('center/wallet', ['lang' => $shopLang])}">
+                        <input type="hidden" name="action" value="withdraw">
+                        <h2><span><i class="fa fa-arrow-circle-down"></i>{:__('Add withdraw')}</span><button type="button" class="shop-wallet-modal-close" data-shop-wallet-close aria-label="{:__('Close')}"><i class="fa fa-times"></i></button></h2>
+                        <label>
+                            <span>{:__('Bank cards')}</span>
+                            <select name="bank_id" required>
+                                <option value="">{:__('Please select bank card')}</option>
+                                {volist name="banks" id="bank"}
+                                <option value="{$bank.id}">{$bank.bank_name|htmlentities} - {$bank.card_no|htmlentities}</option>
+                                {/volist}
+                            </select>
+                        </label>
+                        <label>
+                            <span>{:__('Withdraw amount')}</span>
+                            <input type="number" step="0.01" min="0.01" name="money" required>
+                        </label>
+                        <button type="submit">{:__('Submit withdraw')}</button>
+                    </form>
+                    {else /}
+                    <div class="shop-wallet-desktop-board">
+                        <div class="shop-center-card-head">
+                            <h2>{:__('Recharge records')}</h2>
+                            <a href="javascript:;" data-shop-wallet-toggle="wallet-recharge-form"><i class="fa fa-plus"></i> {:__('Add recharge')}</a>
+                        </div>
+                        <div class="shop-center-record-list">
+                            {if count($recharges)>0}
+                            {volist name="recharges" id="recharge"}
+                            <div>
+                                <strong>{:__('Currency symbol')}{$recharge.money|htmlentities}</strong>
+                                <span>{$recharge.recharge_no|htmlentities}</span>
+                                <em>{$recharge.pay_status|htmlentities}</em>
+                                <time>{$recharge.createtime|date="Y-m-d H:i",###}</time>
+                            </div>
+                            {/volist}
+                            {else /}
+                            <p class="shop-center-muted">{:__('No recharge records')}</p>
+                            {/if}
+                        </div>
+                    </div>
+                    <form id="wallet-recharge-form" class="shop-center-form is-narrow shop-wallet-desktop-form shop-wallet-form-hidden" method="post" action="{:url('center/wallet', ['lang' => $shopLang])}" data-no-ajax="1" data-recharge-customer="1" data-customer-url="{$walletCustomerUrl|htmlentities}">
+                        <input type="hidden" name="action" value="recharge">
+                        <h2><span><i class="fa fa-plus-circle"></i>{:__('Add recharge')}</span><button type="button" class="shop-wallet-modal-close" data-shop-wallet-close aria-label="{:__('Close')}"><i class="fa fa-times"></i></button></h2>
+                        <label>
+                            <span>{:__('Recharge amount')}</span>
+                            <input type="number" step="0.01" min="0.01" name="money" required>
+                        </label>
+                        <label>
+                            <span>{:__('Recharge voucher')}</span>
+                            <input type="text" name="voucher" placeholder="{:__('Transfer number or voucher link optional')}">
+                        </label>
+                        <label>
+                            <span>{:__('Memo')}</span>
+                            <input type="text" name="remark" placeholder="{:__('Optional')}">
+                        </label>
+                        <button type="submit">{:__('Submit recharge')}</button>
+                    </form>
+                    {/if}
+                </section>
+            </div>
+        </div>
+    </main>
+    {include file="common/shop_footer" /}
+</div>
+{include file="common/script" /}
+<script>
+(function () {
+    function getMask() {
+        var mask = document.querySelector('.shop-wallet-modal-mask');
+        if (!mask) {
+            mask = document.createElement('div');
+            mask.className = 'shop-wallet-modal-mask';
+            document.body.appendChild(mask);
+            mask.addEventListener('click', closeWalletForms);
+        }
+        return mask;
+    }
+
+    function closeWalletForms() {
+        document.querySelectorAll('.shop-wallet-desktop-form').forEach(function (form) {
+            form.classList.add('shop-wallet-form-hidden');
+        });
+        document.body.classList.remove('shop-wallet-modal-open');
+        var mask = document.querySelector('.shop-wallet-modal-mask');
+        if (mask) {
+            mask.classList.remove('show');
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        if (event.target.closest('[data-shop-wallet-close]')) {
+            closeWalletForms();
+            return;
+        }
+        var trigger = event.target.closest('[data-shop-wallet-toggle]');
+        if (!trigger) {
+            return;
+        }
+        var form = document.getElementById(trigger.getAttribute('data-shop-wallet-toggle'));
+        if (!form) {
+            return;
+        }
+        document.querySelectorAll('.shop-wallet-desktop-form').forEach(function (item) {
+            if (item !== form) {
+                item.classList.add('shop-wallet-form-hidden');
+            }
+        });
+        form.classList.remove('shop-wallet-form-hidden');
+        document.body.classList.add('shop-wallet-modal-open');
+        requestAnimationFrame(function () {
+            getMask().classList.add('show');
+        });
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeWalletForms();
+        }
+    });
+
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (!form || form.getAttribute('data-recharge-customer') !== '1') {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        var customerUrl = form.getAttribute('data-customer-url') || 'javascript:;';
+        if (customerUrl.indexOf('javascript:') === 0) {
+            return;
+        }
+        window.open(customerUrl, '_blank', 'noopener');
+    }, true);
+})();
+</script>
+</body>
+</html>

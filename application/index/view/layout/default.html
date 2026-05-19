@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+    <head>
+        {include file="common/meta" /}
+        <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="__CDN__/assets/css/user.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+        <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+    </head>
+
+    <body class="shop-ease-body bg-slate-50">
+        <div class="shop-ease-page">
+            {include file="common/shop_header" /}
+
+        <main class="shop-auth-content">
+            {__CONTENT__}
+        </main>
+
+            {include file="common/shop_footer" /}
+        </div>
+
+        {include file="common/script" /}
+
+    </body>
+
+</html>

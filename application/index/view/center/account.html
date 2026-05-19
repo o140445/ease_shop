@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body shop-center-page-body bg-slate-50">
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+    <main class="shop-ease-container">
+        <div class="shop-center-shell">
+            {include file="common/shop_center_sidebar" /}
+            <section class="shop-center-content shop-center-card">
+                <div class="shop-center-page-head">
+                    <a class="shop-center-back" href="{:url('center/index', ['lang' => $shopLang])}"><i class="fa fa-angle-left"></i></a>
+                    <div>
+                        <h1>{:__('Account settings')}</h1>
+                    </div>
+                </div>
+                <div class="shop-account-menu">
+                    <a href="{:url('center/profile', ['lang' => $shopLang])}">
+                        <i class="fa fa-id-card-o"></i>
+                        <span>{:__('Edit profile')}</span>
+                        <b class="fa fa-angle-right"></b>
+                    </a>
+                    <a href="{:url('center/password', ['lang' => $shopLang])}">
+                        <i class="fa fa-lock"></i>
+                        <span>{:__('Change password')}</span>
+                        <b class="fa fa-angle-right"></b>
+                    </a>
+                    <a href="{:url('center/paypassword', ['lang' => $shopLang])}">
+                        <i class="fa fa-shield"></i>
+                        <span>{:__('Change payment password')}</span>
+                        <b class="fa fa-angle-right"></b>
+                    </a>
+                    <a href="{:url('center/bank', ['lang' => $shopLang])}">
+                        <i class="fa fa-credit-card"></i>
+                        <span>{:__('Bank card information')}</span>
+                        <b class="fa fa-angle-right"></b>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+    {include file="common/shop_footer" /}
+</div>
+{include file="common/script" /}
+</body>
+</html>

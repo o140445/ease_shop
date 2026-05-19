@@ -1,0 +1,79 @@
+<script src="__CDN__/assets/js/require{$Think.config.app_debug?'':'.min'}.js" data-main="__CDN__/assets/js/require-frontend{$Think.config.app_debug?'':'.min'}.js?v={$site.version|htmlentities}"></script>
+<script>
+(function () {
+    function showShopToast(message, type) {
+        var toast = document.querySelector('.shop-ease-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'shop-ease-toast';
+            document.body.appendChild(toast);
+        }
+        toast.className = 'shop-ease-toast ' + (type || 'info');
+        toast.textContent = message || "{:__('Operation completed')}";
+        window.clearTimeout(toast._timer);
+        requestAnimationFrame(function () {
+            toast.classList.add('show');
+        });
+        toast._timer = window.setTimeout(function () {
+            toast.classList.remove('show');
+        }, 1800);
+    }
+
+    function getRedirectUrl(url) {
+        if (!url || url.indexOf('javascript:') === 0) {
+            return '';
+        }
+        return url;
+    }
+
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (!form || form.tagName !== 'FORM') {
+            return;
+        }
+        if (!document.body.classList.contains('shop-center-page-body') && form.getAttribute('data-ajax') !== '1') {
+            return;
+        }
+        if (!form.closest('.shop-ease-page') || String(form.method || '').toLowerCase() !== 'post' || form.getAttribute('data-no-ajax') === '1') {
+            return;
+        }
+        event.preventDefault();
+        if (form.dataset.submitting === '1') {
+            return;
+        }
+        form.dataset.submitting = '1';
+        var submitButton = form.querySelector('[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+        fetch(form.action || window.location.href, {
+            method: 'POST',
+            body: new FormData(form),
+            credentials: 'same-origin',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(function (ret) {
+            var ok = Number(ret.code) === 1;
+            showShopToast(ret.msg, ok ? 'success' : 'error');
+            if (ok) {
+                var redirectUrl = getRedirectUrl(ret.url || '');
+                if (redirectUrl) {
+                    window.setTimeout(function () {
+                        window.location.href = redirectUrl;
+                    }, 650);
+                }
+            }
+        }).catch(function () {
+            showShopToast("{:__('Network error, please try again later')}", 'error');
+        }).finally(function () {
+            form.dataset.submitting = '0';
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        });
+    }, true);
+})();
+</script>

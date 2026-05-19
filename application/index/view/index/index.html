@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body bg-slate-50">
+{php}
+    $allProducts = [];
+    foreach ($categoryProducts as $category) {
+        foreach ($category['products'] as $product) {
+            $allProducts[] = $product;
+        }
+    }
+    $heroProduct = isset($allProducts[0]) ? $allProducts[0] : null;
+    $heroImage = !empty($banners) && !empty($banners[0]['image']) ? $banners[0]['image'] : ($heroProduct && $heroProduct['main_image'] ? $heroProduct['main_image'] : '/assets/img/logo.png');
+    $heroTitle = !empty($banners) && !empty($banners[0]['title']) ? $banners[0]['title'] : ($heroProduct ? $heroProduct['title'] : 'ShopEase');
+    $heroHref = !empty($banners) && !empty($banners[0]['href']) ? $banners[0]['href'] : url('product/index', ['lang' => $shopLang]);
+{/php}
+
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    <main class="shop-ease-container">
+        <section class="shop-ease-hero-row">
+            <aside class="shop-ease-sidebar hidden-xs hidden-sm">
+                <div class="shop-ease-sidebar-title"><i class="fa fa-bars"></i><span>{:__('All categories')}</span></div>
+                <div class="shop-ease-sidebar-list">
+                    {volist name="shopCategories" id="category"}
+                    <a href="{:url('product/index', ['category_id' => $category.id, 'lang' => $shopLang])}">
+                        <i class="fa fa-th-large"></i>
+                        <span>{$category.name|htmlentities}</span>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                    {/volist}
+                </div>
+            </aside>
+
+            <div class="shop-ease-hero-main">
+                <section class="shop-ease-hero-card">
+                    <div class="shop-ease-hero-carousel" data-shop-carousel>
+                        {if !empty($banners)}
+                        {volist name="banners" id="banner" key="bannerKey"}
+                        <a href="{$banner.href|htmlentities}" class="shop-ease-hero-slide {$bannerKey==1?'active':''}">
+                            <img src="{$banner.image|cdnurl|htmlentities}" alt="{$banner.title|htmlentities}">
+                        </a>
+                        {/volist}
+                        {else /}
+                        <a href="{$heroHref|htmlentities}" class="shop-ease-hero-slide active">
+                            <img src="{$heroImage|cdnurl|htmlentities}" alt="{$heroTitle|htmlentities}">
+                        </a>
+                        {/if}
+                    </div>
+                    <button class="shop-ease-arrow left" type="button" aria-label="{:__('Previous slide')}" data-shop-carousel-prev><i class="fa fa-angle-left"></i></button>
+                    <button class="shop-ease-arrow right" type="button" aria-label="{:__('Next slide')}" data-shop-carousel-next><i class="fa fa-angle-right"></i></button>
+                    <div class="shop-ease-dots" aria-label="{:__('Carousel pagination')}">
+                        {if !empty($banners)}
+                        {volist name="banners" id="banner" key="bannerKey"}
+                        <button type="button" class="{$bannerKey==1?'active':''}" aria-label="{:__('Slide')} {$bannerKey}" data-shop-carousel-dot="{$bannerKey-1}"></button>
+                        {/volist}
+                        {else /}
+                        <button type="button" class="active" aria-label="{:__('Slide')} 1" data-shop-carousel-dot="0"></button>
+                        {/if}
+                    </div>
+                </section>
+
+                <section class="shop-ease-service-row hidden-xs">
+                    <div><i class="fa fa-shield"></i><strong>{:__('Authentic guarantee')}</strong><span>{:__('100% authentic products')}</span></div>
+                    <div><i class="fa fa-truck"></i><strong>{:__('Fast delivery')}</strong><span>{:__('Multi-warehouse direct shipping')}</span></div>
+                    <div><i class="fa fa-refresh"></i><strong>{:__('7-day returns')}</strong><span>{:__('Worry-free after-sales service')}</span></div>
+                    <div><i class="fa fa-diamond"></i><strong>{:__('Member exclusive')}</strong><span>{:__('Member discounts and benefits')}</span></div>
+                </section>
+            </div>
+        </section>
+
+        {volist name="categoryProducts" id="category"}
+        <section class="shop-ease-section">
+            <div class="shop-ease-section-head">
+                <h2>{$category.name|htmlentities}</h2>
+                <a href="{:url('product/index', ['category_id' => $category.id, 'lang' => $shopLang])}">{:__('View more')} <i class="fa fa-angle-right"></i></a>
+            </div>
+
+            <div class="shop-ease-products shop-list-grid">
+                {volist name="category.products" id="product" length="6"}
+                <article class="shop-list-card">
+                    <a href="{:url('product/detail', ['id' => $product.id, 'lang' => $shopLang])}" class="shop-list-image">
+                        <img src="{$product.main_image|cdnurl|htmlentities}" alt="{$product.title|htmlentities}">
+                    </a>
+                    <div class="shop-list-info">
+                        <h3><a href="{:url('product/detail', ['id' => $product.id, 'lang' => $shopLang])}">{$product.title|htmlentities}</a></h3>
+                        {if $product.subtitle}<p>{$product.subtitle|htmlentities}</p>{/if}
+                        <div class="shop-list-price">
+                            <strong>{:__('Currency symbol')}{$product.display_price|htmlentities}</strong>
+                            {if $product.display_market_price}<del>{:__('Currency symbol')}{$product.display_market_price|htmlentities}</del>{/if}
+                            <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                                <input type="hidden" name="product_id" value="{$product.id}">
+                                <button type="submit" aria-label="{:__('Add to cart')}"><i class="fa fa-shopping-cart"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+                {/volist}
+            </div>
+        </section>
+        {/volist}
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+<script>
+(function () {
+    var carousel = document.querySelector('[data-shop-carousel]');
+    if (!carousel) {
+        return;
+    }
+    var slides = carousel.querySelectorAll('.shop-ease-hero-slide');
+    var dots = document.querySelectorAll('[data-shop-carousel-dot]');
+    var prev = document.querySelector('[data-shop-carousel-prev]');
+    var next = document.querySelector('[data-shop-carousel-next]');
+    if (slides.length <= 1) {
+        return;
+    }
+    var index = 0;
+    var timer;
+    function go(nextIndex) {
+        slides[index].classList.remove('active');
+        if (dots[index]) {
+            dots[index].classList.remove('active');
+        }
+        index = (nextIndex + slides.length) % slides.length;
+        slides[index].classList.add('active');
+        if (dots[index]) {
+            dots[index].classList.add('active');
+        }
+    }
+    function restart() {
+        clearInterval(timer);
+        timer = setInterval(function () {
+            go(index + 1);
+        }, 3500);
+    }
+    if (prev) {
+        prev.addEventListener('click', function () {
+            go(index - 1);
+            restart();
+        });
+    }
+    if (next) {
+        next.addEventListener('click', function () {
+            go(index + 1);
+            restart();
+        });
+    }
+    dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+            go(parseInt(dot.getAttribute('data-shop-carousel-dot'), 10) || 0);
+            restart();
+        });
+    });
+    restart();
+})();
+</script>
+</body>
+</html>

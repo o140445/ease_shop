@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="{$shopLang|default='ar'|htmlentities}" dir="{$shopLang=='ar'?'rtl':'ltr'}">
+<head>
+    {include file="common/meta" /}
+    <link href="__CDN__/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__CDN__/assets/libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="__CDN__/assets/css/shop.css?v={$Think.config.site.version|htmlentities}" rel="stylesheet">
+</head>
+<body class="shop-ease-body bg-slate-50">
+{php}
+    $currentCategoryName = __('All products');
+    foreach ($categories as $item) {
+        if ((int)$item['id'] === (int)$categoryId) {
+            $currentCategoryName = $item['name'];
+            break;
+        }
+    }
+{/php}
+
+<div class="shop-ease-page">
+    {include file="common/shop_header" /}
+
+    <main class="shop-ease-container">
+        <section class="shop-list-hero is-compact">
+            <div>
+                <span>ShopEase</span>
+                <h1>{$currentCategoryName|htmlentities}</h1>
+                <p>{if $keyword}{:__('Search results for')} “{$keyword|htmlentities}”{else /}{:__('Browse curated products by category')}{/if}</p>
+            </div>
+        </section>
+
+        <section class="shop-list-layout">
+            <aside class="shop-list-filter">
+                <h2><i class="fa fa-th-large"></i> {:__('Product categories')}</h2>
+                <a class="{$categoryId==0?'active':''}" href="{:url('product/index', ['lang' => $shopLang])}">
+                    <span>{:__('All products')}</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                {volist name="categories" id="category"}
+                <a class="{$categoryId==$category.id?'active':''}" href="{:url('product/index', ['category_id' => $category.id, 'lang' => $shopLang])}">
+                    <span>{$category.name|htmlentities}</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                {/volist}
+            </aside>
+
+            <div class="shop-list-main">
+                <div class="shop-list-toolbar">
+                    <div>
+                        <strong>{$currentCategoryName|htmlentities}</strong>
+                        <span>{:__('Total %s products', $products->total())}</span>
+                    </div>
+                </div>
+
+                <div class="shop-list-sortbar">
+                    <div class="shop-list-sort">
+                        {foreach $sortOptions as $sortKey=>$sortLabel}
+                        <a class="{$sort==$sortKey?'active':''}" href="{:url('product/index', ['category_id' => $categoryId, 'keyword' => $keyword, 'sort' => $sortKey, 'order' => $order, 'lang' => $shopLang])}">{$sortLabel|htmlentities}</a>
+                        {/foreach}
+                    </div>
+                    <div class="shop-list-order">
+                        <a class="{$order=='asc'?'active':''}" href="{:url('product/index', ['category_id' => $categoryId, 'keyword' => $keyword, 'sort' => $sort, 'order' => 'asc', 'lang' => $shopLang])}">
+                            <i class="fa fa-sort-amount-asc"></i> {:__('Ascending')}
+                        </a>
+                        <a class="{$order=='desc'?'active':''}" href="{:url('product/index', ['category_id' => $categoryId, 'keyword' => $keyword, 'sort' => $sort, 'order' => 'desc', 'lang' => $shopLang])}">
+                            <i class="fa fa-sort-amount-desc"></i> {:__('Descending')}
+                        </a>
+                    </div>
+                </div>
+
+                {if count($products)>0}
+                <div class="shop-list-grid">
+                    {volist name="products" id="product"}
+                    <article class="shop-list-card">
+                        <a href="{:url('product/detail', ['id' => $product.id, 'lang' => $shopLang])}" class="shop-list-image">
+                            <img src="{$product.main_image|cdnurl|htmlentities}" alt="{$product.title|htmlentities}">
+                        </a>
+                        <div class="shop-list-info">
+                            <h3><a href="{:url('product/detail', ['id' => $product.id, 'lang' => $shopLang])}">{$product.title|htmlentities}</a></h3>
+                            {if $product.subtitle}<p>{$product.subtitle|htmlentities}</p>{/if}
+                            <div class="shop-list-price">
+                                <strong>{:__('Currency symbol')}{$product.price|htmlentities}</strong>
+                                {if $product.market_price>0}<del>{:__('Currency symbol')}{$product.market_price|htmlentities}</del>{/if}
+                                <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                                    <input type="hidden" name="product_id" value="{$product.id}">
+                                    <button type="submit" aria-label="{:__('Add to cart')}"><i class="fa fa-shopping-cart"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+                    {/volist}
+                </div>
+                <div class="shop-list-pagination">{$products->render()}</div>
+                {else /}
+                <div class="shop-list-empty">
+                    <i class="fa fa-search"></i>
+                    <strong>{:__('No products yet')}</strong>
+                    <span>{:__('Try another category or keyword')}</span>
+                </div>
+                {/if}
+            </div>
+        </section>
+    </main>
+
+    {include file="common/shop_footer" /}
+</div>
+
+{include file="common/script" /}
+</body>
+</html>

@@ -2,65 +2,74 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
 
     var Controller = {
         index: function () {
-            // 基于准备好的dom，初始化echarts实例
-            var myChart = Echarts.init(document.getElementById('echart'), 'walden');
-
-            // 指定图表的配置项和数据
+            var chartEl = document.getElementById('echart');
+            if (!chartEl) {
+                return;
+            }
+            var myChart = Echarts.init(chartEl, 'walden');
             var option = {
-                title: {
-                    text: '',
-                    subtext: ''
-                },
-                color: [
-                    "#18d1b1",
-                    "#3fb1e3",
-                    "#626c91",
-                    "#a0a7e6",
-                    "#c4ebad",
-                    "#96dee8"
-                ],
+                color: ["#3c8dbc", "#18bc9c"],
                 tooltip: {
-                    trigger: 'axis'
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'line'
+                    }
                 },
                 legend: {
-                    data: [__('Register user')]
+                    data: ['订单数', '成交金额']
                 },
                 toolbox: {
-                    show: false,
-                    feature: {
-                        magicType: {show: true, type: ['stack', 'tiled']},
-                        saveAsImage: {show: true}
-                    }
+                    show: false
                 },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: Config.column
+                    data: Config.column || []
                 },
-                yAxis: {},
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '订单数',
+                        minInterval: 1
+                    },
+                    {
+                        type: 'value',
+                        name: '金额'
+                    }
+                ],
                 grid: [{
-                    left: 'left',
-                    top: 'top',
-                    right: '10',
-                    bottom: 30
+                    left: 45,
+                    top: 45,
+                    right: 55,
+                    bottom: 35
                 }],
-                series: [{
-                    name: __('Register user'),
-                    type: 'line',
-                    smooth: true,
-                    areaStyle: {
-                        normal: {}
+                series: [
+                    {
+                        name: '订单数',
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                opacity: .12
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 2
+                            }
+                        },
+                        data: Config.orderdata || []
                     },
-                    lineStyle: {
-                        normal: {
-                            width: 1.5
-                        }
-                    },
-                    data: Config.userdata
-                }]
+                    {
+                        name: '成交金额',
+                        type: 'bar',
+                        yAxisIndex: 1,
+                        barWidth: 18,
+                        data: Config.revenuedata || []
+                    }
+                ]
             };
 
-            // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
 
             $(window).resize(function () {
@@ -72,7 +81,6 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     myChart.resize();
                 }, 0);
             });
-
         }
     };
 

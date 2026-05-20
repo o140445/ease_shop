@@ -42,6 +42,13 @@ class Frontend extends Controller
 
     public function _initialize()
     {
+        $shopLang = $this->request->param('lang', \think\Cookie::get('shop_lang', 'ar'));
+        $shopLang = in_array($shopLang, ['ar', 'en', 'zh-cn', 'ja', 'es']) ? $shopLang : 'ar';
+        $shopLangFile = APP_PATH . 'index' . DS . 'lang' . DS . $shopLang . '.php';
+        if (is_file($shopLangFile)) {
+            Lang::load($shopLangFile);
+        }
+
         //移除HTML标签
         $this->request->filter('trim,strip_tags,htmlspecialchars');
         $modulename = $this->request->module();

@@ -14,7 +14,7 @@ class Order extends Index
         try {
             list($order, $items) = (new OrderService())->getOrderDetail($user['id'], $id);
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
 
         $hasPayPassword = (new CenterService())->getPaymentPasswordSecret($user) ? 1 : 0;
@@ -35,9 +35,9 @@ class Order extends Index
             (new OrderService())->payWithBalance($user['id'], (int)$this->request->post('id', 0), $payPassword);
         } catch (\Exception $e) {
             if ($e->getMessage() === __('Please set payment password first')) {
-                $this->error($e->getMessage(), url('center/paypassword', ['url' => url('order/detail', ['id' => (int)$this->request->post('id', 0), 'lang' => $this->shopLang]), 'lang' => $this->shopLang]));
+                $this->error(__($e->getMessage()), url('center/paypassword', ['url' => url('order/detail', ['id' => (int)$this->request->post('id', 0), 'lang' => $this->shopLang]), 'lang' => $this->shopLang]));
             }
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
 
         $redirectUrl = url('center/orders', ['status' => 'paid', 'lang' => $this->shopLang]);
@@ -56,7 +56,7 @@ class Order extends Index
         try {
             (new OrderService())->applyReturn($user['id'], (int)$this->request->post('id', 0));
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
         $this->success(__('Return request submitted'), url('center/orders', ['lang' => $this->shopLang]));
     }
@@ -71,7 +71,7 @@ class Order extends Index
         try {
             (new OrderService())->completeByUser($user['id'], $orderId);
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
         $this->success(__('Order completed successfully'), url('order/detail', ['id' => $orderId, 'lang' => $this->shopLang]));
     }
@@ -85,7 +85,7 @@ class Order extends Index
         try {
             (new OrderService())->applyRecycle($user['id'], (int)$this->request->post('id', 0));
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
         $this->success(__('Recycle audit submitted'), url('center/orders', ['status' => 'completed', 'lang' => $this->shopLang]));
     }

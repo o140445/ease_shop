@@ -1,25 +1,30 @@
 define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, undefined, Frontend, Form, Template) {
+    var showAuthError = function (data, ret) {
+        var message = ret && (ret.msg || ret.errmsg || ret.message || (ret.data && (ret.data.msg || ret.data.errmsg || ret.data.message))) ? (ret.msg || ret.errmsg || ret.message || (ret.data && (ret.data.msg || ret.data.errmsg || ret.data.message))) : __('Operation failed');
+        Layer.msg(message);
+        return false;
+    };
     var validatoroptions = {
         invalid: function (form, errors) {
             $.each(errors, function (i, j) {
-                Layer.msg(j);
+                Layer.msg(j || __('Operation failed'));
             });
         }
     };
     var Controller = {
         login: function () {
 
-            //本地验证未通过时提示
+            // Show validation messages locally.
             $("#login-form").data("validator-options", validatoroptions);
 
-            //为表单绑定事件
+            // Bind form submit event.
             Form.api.bindevent($("#login-form"), function (data, ret) {
                 setTimeout(function () {
                     location.href = ret.url ? ret.url : "/";
                 }, 1000);
-            });
+            }, showAuthError);
 
-            //忘记密码
+            // Forgot password dialog.
             $(document).on("click", ".btn-forgot", function () {
                 var id = "resetpwdtpl";
                 var content = Template(id, {});
@@ -47,23 +52,25 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
             });
         },
         register: function () {
-            //本地验证未通过时提示
+            // Show validation messages locally.
             $("#register-form").data("validator-options", validatoroptions);
 
-            //为表单绑定事件
+            // Bind form submit event.
             Form.api.bindevent($("#register-form"), function (data, ret) {
                 setTimeout(function () {
                     location.href = ret.url ? ret.url : "/";
                 }, 1000);
             }, function (data) {
+                showAuthError(data, arguments[1]);
                 $("input[name=captcha]").next(".input-group-btn").find("img").trigger("click");
+                return false;
             });
         },
         changepwd: function () {
-            //本地验证未通过时提示
+            // Show validation messages locally.
             $("#changepwd-form").data("validator-options", validatoroptions);
 
-            //为表单绑定事件
+            // Bind form submit event.
             Form.api.bindevent($("#changepwd-form"), function (data, ret) {
                 setTimeout(function () {
                     location.href = ret.url ? ret.url : "/";
@@ -71,7 +78,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
             });
         },
         profile: function () {
-            // 给上传按钮添加上传成功事件
+            // Update avatar after upload succeeds.
             $("#faupload-avatar").data("upload-success", function (data) {
                 var url = Fast.api.cdnurl(data.url);
                 $(".profile-user-img").prop("src", url);
@@ -84,7 +91,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
                 var content = Template(id, {});
                 Layer.open({
                     type: 1,
-                    title: "修改",
+                    title: __('Change'),
                     area: [$(window).width() < 450 ? ($(window).width() - 10) + "px" : "450px", "355px"],
                     content: content,
                     success: function (layero) {
@@ -100,7 +107,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
         attachment: function () {
             require(['table'], function (Table) {
 
-                // 初始化表格参数配置
+                // Initialize table options.
                 Table.api.init({
                     extend: {
                         index_url: 'user/attachment',
@@ -130,7 +137,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
                     });
                 });
 
-                // 初始化表格
+                // Initialize table.
                 table.bootstrapTable({
                     url: $.fn.bootstrapTable.defaults.extend.index_url,
                     sortName: 'id',
@@ -175,12 +182,12 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
                     ]
                 });
 
-                // 选中多个
+                // Select multiple files.
                 $(document).on("click", ".btn-choose-multi", function () {
                     Fast.api.close({url: urlArr.join(","), multiple: multiple});
                 });
 
-                // 为表格绑定事件
+                // Bind table events.
                 Table.api.bindevent(table);
                 require(['upload'], function (Upload) {
                     Upload.api.upload($("#toolbar .faupload"), function () {

@@ -57,7 +57,11 @@
             return response.json();
         }).then(function (ret) {
             var ok = Number(ret.code) === 1;
-            showShopToast(ret.msg, ok ? 'success' : 'error');
+            var message = ret.msg || ret.errmsg || ret.message || (ret.data && (ret.data.msg || ret.data.errmsg || ret.data.message)) || (ok ? "{:__('Operation completed')}" : "{:__('Operation failed')}");
+            if (ok && form.action && form.action.indexOf('/cart/add') !== -1) {
+                message = "{:__('Added to cart')}";
+            }
+            showShopToast(message, ok ? 'success' : 'error');
             if (ok) {
                 var redirectUrl = getRedirectUrl(ret.url || '');
                 if (redirectUrl) {

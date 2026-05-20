@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 {php}
     $metaTitle = trim((isset($title) && $title !== '' ? $title . ' - ' : '') . ($site['name'] ?? 'Shop'));
+    $metaShareTitle = trim((string)($site['name'] ?? 'Shop'));
     $metaDescription = isset($description) && trim((string)$description) !== '' ? trim((string)$description) : trim((string)($site['site_description'] ?? ''));
     $metaUrl = request()->url(true);
     $metaImage = '/assets/img/logo.png';
@@ -20,16 +21,21 @@
 {/if}
 {if $metaDescription}
 <meta name="description" content="{$metaDescription|htmlentities}">
+<meta itemprop="description" content="{$metaDescription|htmlentities}">
+<meta property="description" content="{$metaDescription|htmlentities}">
 <meta property="og:description" content="{$metaDescription|htmlentities}">
 <meta name="twitter:description" content="{$metaDescription|htmlentities}">
 {/if}
-<meta property="og:title" content="{$metaTitle|htmlentities}">
+<meta property="og:title" content="{$metaShareTitle|htmlentities}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{$metaUrl|htmlentities}">
 <meta property="og:site_name" content="{$site.name|htmlentities}">
 <meta property="og:image" content="{$metaImage|htmlentities}">
+<meta property="og:image:secure_url" content="{$metaImage|htmlentities}">
+<meta property="og:image:alt" content="{$metaShareTitle|htmlentities}">
+<link rel="canonical" href="{$metaUrl|htmlentities}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{$metaTitle|htmlentities}">
+<meta name="twitter:title" content="{$metaShareTitle|htmlentities}">
 <meta name="twitter:image" content="{$metaImage|htmlentities}">
 
 <link rel="shortcut icon" href="__CDN__/assets/img/favicon.ico" />

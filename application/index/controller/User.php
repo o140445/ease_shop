@@ -15,7 +15,7 @@ use think\Lang;
 use think\Validate;
 
 /**
- * 会员中心
+ * User center
  */
 class User extends Frontend
 {
@@ -48,7 +48,7 @@ class User extends Frontend
     }
 
     /**
-     * 会员中心
+     * User center
      */
     public function index()
     {
@@ -56,7 +56,7 @@ class User extends Frontend
     }
 
     /**
-     * 注册会员
+     * Register user
      */
     public function register()
     {
@@ -88,7 +88,7 @@ class User extends Frontend
                 'password'  => $password,
                 '__token__' => $token,
             ];
-            //验证码
+            // Captcha
             $captchaResult = true;
             $captchaType = $this->getRegisterCaptchaType();
             if ($captchaType) {
@@ -114,10 +114,10 @@ class User extends Frontend
                 (new ShopAuthService())->register($username, $password, $this->request->ip());
                 $this->success(__('Sign up successful'), $url ? $url : url('center/index', ['lang' => $this->shopLang]));
             } catch (\Exception $e) {
-                $this->error($e->getMessage(), null, ['token' => $this->request->token()]);
+                $this->error(__($e->getMessage()), null, ['token' => $this->request->token()]);
             }
         }
-        //判断来源
+        // Check request source.
         $referer = $this->request->server('HTTP_REFERER', '', 'url_clean');
         if (!$url && $referer && !preg_match("/(user\/login|user\/register|user\/logout)/i", $referer)) {
             $url = $referer;
@@ -141,7 +141,7 @@ class User extends Frontend
     }
 
     /**
-     * 会员登录
+     * User login
      */
     public function login()
     {
@@ -187,10 +187,10 @@ class User extends Frontend
                 (new ShopAuthService())->login($account, $password, (bool)$keeplogin, $this->request->ip());
                 $this->success(__('Logged in successful'), $url ? $url : url('center/index', ['lang' => $this->shopLang]));
             } catch (\Exception $e) {
-                $this->error($e->getMessage(), null, ['token' => $this->request->token()]);
+                $this->error(__($e->getMessage()), null, ['token' => $this->request->token()]);
             }
         }
-        //判断来源
+        // Check request source.
         $referer = $this->request->server('HTTP_REFERER', '', 'url_clean');
         if (!$url && $referer && !preg_match("/(user\/login|user\/register|user\/logout)/i", $referer)) {
             $url = $referer;
@@ -202,7 +202,7 @@ class User extends Frontend
     }
 
     /**
-     * 退出登录
+     * Logout
      */
     public function logout()
     {
@@ -218,7 +218,7 @@ class User extends Frontend
     }
 
     /**
-     * 个人信息
+     * Profile
      */
     public function profile()
     {
@@ -227,7 +227,7 @@ class User extends Frontend
     }
 
     /**
-     * 修改密码
+     * Change password
      */
     public function changepwd()
     {
@@ -271,7 +271,7 @@ class User extends Frontend
                 (new ShopAuthService())->changePassword($user['id'], $oldpassword, $newpassword);
                 $this->success(__('Reset password successful'), url('user/login'));
             } catch (\Exception $e) {
-                $this->error($e->getMessage(), null, ['token' => $this->request->token()]);
+                $this->error(__($e->getMessage()), null, ['token' => $this->request->token()]);
             }
         }
         $this->view->assign('title', __('Change password'));
@@ -280,7 +280,7 @@ class User extends Frontend
 
     public function attachment()
     {
-        //设置过滤方法
+            // Set input filter.
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
             $shopUser = (new ShopAuthService())->currentUser();

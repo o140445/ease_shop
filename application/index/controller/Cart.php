@@ -26,7 +26,7 @@ class Cart extends Index
             try {
                 $data = $orderService->getFormattedCheckoutData($user);
             } catch (\Exception $e) {
-                $this->error($e->getMessage(), url('product/index', ['lang' => $this->shopLang]));
+                $this->error(__($e->getMessage()), url('product/index', ['lang' => $this->shopLang]));
             }
             $this->view->assign(array_merge(['user' => $user], $data));
             return $this->view->fetch();
@@ -35,7 +35,7 @@ class Cart extends Index
         try {
             $orderId = $orderService->createFromCart($user);
         } catch (\Exception $e) {
-            $this->error($e->getMessage() ?: __('Order creation failed, please try again later'));
+            $this->error(__($e->getMessage()) ?: __('Order creation failed, please try again later'));
         }
 
         if ($this->request->isAjax()) {
@@ -59,7 +59,7 @@ class Cart extends Index
                 max(1, (int)$this->request->post('quantity', 1))
             );
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
 
         if ($this->request->isAjax()) {
@@ -78,7 +78,7 @@ class Cart extends Index
                 max(1, (int)$this->request->post('quantity', 1))
             );
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
 
         $this->redirect('cart/index', ['lang' => $this->shopLang]);
@@ -94,7 +94,7 @@ class Cart extends Index
         try {
             (new CartService())->remove($user['id'], (int)$this->request->post('id', 0));
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            $this->error(__($e->getMessage()));
         }
 
         $this->redirect('cart/index', ['lang' => $this->shopLang]);

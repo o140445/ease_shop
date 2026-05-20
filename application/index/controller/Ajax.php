@@ -8,7 +8,7 @@ use think\Loader;
 use think\Response;
 
 /**
- * Ajax异步请求接口
+ * Ajax request endpoints
  * @internal
  */
 class Ajax extends Frontend
@@ -19,14 +19,14 @@ class Ajax extends Frontend
     protected $layout = '';
 
     /**
-     * 加载语言包
+     * Load language package
      */
     public function lang()
     {
         $this->request->get(['callback' => 'define']);
         $header = ['Content-Type' => 'application/javascript'];
         if (!config('app_debug')) {
-            $offset = 30 * 60 * 60 * 24; // 缓存一个月
+            $offset = 30 * 60 * 60 * 24; // Cache for one month.
             $header['Cache-Control'] = 'public';
             $header['Pragma'] = 'cache';
             $header['Expires'] = gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
@@ -41,17 +41,17 @@ class Ajax extends Frontend
         $controllername = input("controllername");
         $className = Loader::parseClass($this->request->module(), 'controller', $controllername, false);
 
-        //存在对应的类才加载
+        // Load the matching class when it exists.
         if (class_exists($className)) {
             $this->loadlang($controllername);
         }
 
-        //强制输出JSON Object
+        // Force JSON object output.
         return jsonp(Lang::get(), 200, $header, ['json_encode_param' => JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE]);
     }
 
     /**
-     * 生成后缀图标
+     * Generate suffix icon
      */
     public function icon()
     {
@@ -59,7 +59,7 @@ class Ajax extends Frontend
         $suffix = $suffix ? $suffix : "FILE";
         $data = build_suffix_image($suffix);
         $header = ['Content-Type' => 'image/svg+xml'];
-        $offset = 30 * 60 * 60 * 24; // 缓存一个月
+        $offset = 30 * 60 * 60 * 24; // Cache for one month.
         $header['Cache-Control'] = 'public';
         $header['Pragma'] = 'cache';
         $header['Expires'] = gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
@@ -68,7 +68,7 @@ class Ajax extends Frontend
     }
 
     /**
-     * 上传文件
+     * Upload file
      */
     public function upload()
     {

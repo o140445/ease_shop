@@ -70,7 +70,7 @@ class Center extends Index
             try {
                 (new CenterService())->saveProfile($user['id'], $this->request->post());
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+                $this->error(__($e->getMessage()));
             }
             $this->success(__('Profile saved'), url('center/profile', ['lang' => $this->shopLang]));
         }
@@ -97,7 +97,7 @@ class Center extends Index
                 try {
                     (new CenterService())->setDefaultAddress($user['id'], (int)$this->request->post('id', 0));
                 } catch (\Exception $e) {
-                    $this->error($e->getMessage());
+                    $this->error(__($e->getMessage()));
                 }
                 $this->success(__('Default address set'), url('center/address', ['lang' => $this->shopLang]));
             }
@@ -109,7 +109,7 @@ class Center extends Index
             try {
                 (new CenterService())->saveAddress($user['id'], $this->request->post());
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+                $this->error(__($e->getMessage()));
             }
             $this->success(__('Address added'), url('center/address', ['lang' => $this->shopLang]));
         }
@@ -127,7 +127,7 @@ class Center extends Index
             try {
                 (new CenterService())->saveAddress($user['id'], $this->request->post());
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+                $this->error(__($e->getMessage()));
             }
             $this->success(__('Address added'), url('center/address', ['lang' => $this->shopLang]));
         }
@@ -145,7 +145,7 @@ class Center extends Index
                 try {
                     (new CenterService())->setDefaultBank($user['id'], (int)$this->request->post('id', 0));
                 } catch (\Exception $e) {
-                    $this->error($e->getMessage());
+                    $this->error(__($e->getMessage()));
                 }
                 $this->success(__('Default bank card set'), url('center/bank', ['lang' => $this->shopLang]));
             }
@@ -169,7 +169,7 @@ class Center extends Index
             try {
                 (new CenterService())->saveBank($user['id'], $this->request->post());
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+                $this->error(__($e->getMessage()));
             }
             $this->success(__('Bank card added'), url('center/bank', ['lang' => $this->shopLang]));
         }
@@ -196,13 +196,13 @@ class Center extends Index
                 'renewpassword.confirm' => __('The two new passwords do not match'),
             ]);
             if (!$validate->check(compact('oldpassword', 'newpassword', 'renewpassword'))) {
-                $this->error($validate->getError());
+                $this->error(__($validate->getError()));
             }
             try {
                 (new ShopAuthService())->changePassword($user['id'], $oldpassword, $newpassword);
                 $this->success(__('Password changed, please login again'), url('user/login', ['lang' => $this->shopLang]));
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+                $this->error(__($e->getMessage()));
             }
         }
         $this->view->assign('title', __('Login password'));
@@ -226,7 +226,7 @@ class Center extends Index
             try {
                 $centerService->savePayPassword($user, $oldpassword, $newpassword, $renewpassword);
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+                $this->error(__($e->getMessage()));
             }
             $this->success(__('Payment password saved'), $redirectUrl);
         }
@@ -247,7 +247,7 @@ class Center extends Index
                 try {
                     (new CenterService())->createRecharge($user['id'], $this->request->post());
                 } catch (\Exception $e) {
-                    $this->error($e->getMessage());
+                    $this->error(__($e->getMessage()));
                 }
                 $this->success(__('Recharge request submitted, waiting for confirmation'), url('center/wallet', ['wallet_tab' => 'recharge', 'lang' => $this->shopLang]));
                 */
@@ -257,7 +257,7 @@ class Center extends Index
                 try {
                     (new CenterService())->createWithdraw($user, $this->request->post());
                 } catch (\Exception $e) {
-                    $this->error($e->getMessage());
+                    $this->error(__($e->getMessage()));
                 }
                 $this->success(__('Withdraw request submitted, waiting for review'), url('center/wallet', ['wallet_tab' => 'withdraw', 'lang' => $this->shopLang]));
             }
@@ -265,7 +265,7 @@ class Center extends Index
                 try {
                     (new CenterService())->saveBank($user['id'], $this->request->post());
                 } catch (\Exception $e) {
-                    $this->error($e->getMessage());
+                    $this->error(__($e->getMessage()));
                 }
                 $this->success(__('Bank card added'), url('center/wallet', ['lang' => $this->shopLang]));
             }

@@ -47,6 +47,7 @@ return [
     'Updatetime'            => '更新时间',
     'Deletetime'            => '删除时间',
     'Recharge'              => '充值',
+    'Bank_cards'            => '银行卡',
     'Deduct_balance'        => '扣除余额',
     'Deduct_money'          => '扣除金额',
     'Freeze'                => '冻结账号',

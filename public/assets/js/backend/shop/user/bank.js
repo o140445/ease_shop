@@ -6,7 +6,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'shop.user.bank/index' + location.search,
-                    add_url: 'shop.user.bank/add',
+                    add_url: 'shop.user.bank/add' + location.search,
                     edit_url: 'shop.user.bank/edit',
                     del_url: 'shop.user.bank/del',
                     multi_url: 'shop.user.bank/multi',
@@ -29,13 +29,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'user_id', title: __('User_id')},
-                        {field: 'realname', title: __('Realname'), operate: 'LIKE'},
-                        {field: 'bank_name', title: __('Bank_name'), operate: 'LIKE'},
-                        {field: 'bank_branch', title: __('Bank_branch'), operate: 'LIKE'},
+                        {
+                            field: 'user_id',
+                            title: __('User_name'),
+                            operate: '=',
+                            addClass: 'selectpage',
+                            extend: "data-source='shop/user/index' data-field='nickname'",
+                            formatter: function (value, row) {
+                                return (row.user && (row.user.nickname || row.user.username)) || row.user_id || '-';
+                            }
+                        },
                         {field: 'card_no', title: __('Card_no'), operate: 'LIKE'},
-                        {field: 'mobile', title: __('Mobile'), operate: 'LIKE'},
-                        {field: 'id_card', title: __('Id_card'), operate: 'LIKE'},
                         {field: 'is_default', title: __('Is_default'), searchList: {"0":__('Is_default 0'),"1":__('Is_default 1')}, formatter: Table.api.formatter.normal},
                         {field: 'status', title: __('Status'), searchList: {"normal":__('Status normal'),"hidden":__('Status hidden')}, formatter: Table.api.formatter.status},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},

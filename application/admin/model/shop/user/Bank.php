@@ -57,7 +57,8 @@ class Bank extends Model
         return $list[$value] ?? '';
     }
 
-
-
-
+    public function user()
+    {
+        return $this->belongsTo('app\admin\model\shop\User', 'user_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
 }

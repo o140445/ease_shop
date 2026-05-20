@@ -3,6 +3,9 @@
 return [
     'Id'            => 'ID',
     'User_id'       => '会员ID',
+    'User_name'     => '会员名称',
+    'Current_user'  => '当前会员',
+    'User does not exist' => '会员不存在',
     'Realname'      => '持卡人姓名',
     'Bank_name'     => '银行名称',
     'Bank_branch'   => '开户地址',

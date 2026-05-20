@@ -80,6 +80,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
                                 },
                                 {
+                                    name: 'bankcards',
+                                    text: __('Bank_cards'),
+                                    title: __('Bank_cards'),
+                                    classname: 'btn btn-xs btn-info btn-dialog',
+                                    icon: 'fa fa-credit-card',
+                                    url: function (row) {
+                                        return 'shop.user.bank/index?user_id=' + row.id;
+                                    }
+                                },
+                                {
                                     name: 'deduct',
                                     text: __('Deduct_balance'),
                                     title: __('Deduct_balance'),

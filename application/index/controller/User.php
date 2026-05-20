@@ -90,7 +90,7 @@ class User extends Frontend
             ];
             //验证码
             $captchaResult = true;
-            $captchaType = config("fastadmin.user_register_captcha");
+            $captchaType = $this->getRegisterCaptchaType();
             if ($captchaType) {
                 if ($captchaType == 'mobile') {
                     $captchaResult = Sms::check($mobile, $captcha, 'register');
@@ -122,10 +122,22 @@ class User extends Frontend
         if (!$url && $referer && !preg_match("/(user\/login|user\/register|user\/logout)/i", $referer)) {
             $url = $referer;
         }
-        $this->view->assign('captchaType', config('fastadmin.user_register_captcha'));
+        $this->view->assign('captchaType', $this->getRegisterCaptchaType());
         $this->view->assign('url', $url);
         $this->view->assign('title', __('Register'));
         return $this->view->fetch();
+    }
+
+    protected function getRegisterCaptchaType()
+    {
+        if (!Config::get('fastadmin.login_captcha')) {
+            return false;
+        }
+        $captchaType = Config::get('fastadmin.user_register_captcha');
+        if ($captchaType === false || $captchaType === 0 || $captchaType === '0' || strtolower((string)$captchaType) === 'false') {
+            return false;
+        }
+        return $captchaType;
     }
 
     /**

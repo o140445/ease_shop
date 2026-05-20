@@ -3,7 +3,8 @@ SET NAMES utf8mb4;
 
 INSERT INTO `s_shop_config` (`id`,`group`,`name`,`title`,`type`,`value`,`weigh`,`status`,`createtime`,`updatetime`) VALUES
 (1,'basic','site_name','Store name','string','Nova Market',100,'normal',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()),
-(2,'basic','withdraw_fee_rate','Withdraw fee rate','number','1.00',90,'normal',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())
+(2,'basic','withdraw_fee_rate','Withdraw fee rate','number','1.00',90,'normal',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()),
+(3,'basic','site_description','Site description','textarea','Shop Ease is a secure online store for curated electronics, home essentials and lifestyle products, with member pricing, balance payment and reliable after-sales service.',80,'normal',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())
 ON DUPLICATE KEY UPDATE `value`=VALUES(`value`),`updatetime`=UNIX_TIMESTAMP();
 
 INSERT INTO `s_shop_user_level` (`id`,`name`,`level`,`icon`,`discount_rate`,`min_order_amount`,`min_pay_amount`,`min_recharge_amount`,`description`,`is_default`,`weigh`,`status`,`createtime`,`updatetime`) VALUES

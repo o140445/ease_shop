@@ -1,14 +1,36 @@
 <meta charset="utf-8">
-<title>{$title|default=''|htmlentities} – {$site.name|htmlentities}</title>
+{php}
+    $metaTitle = trim((isset($title) && $title !== '' ? $title . ' - ' : '') . ($site['name'] ?? 'Shop'));
+    $metaDescription = isset($description) && trim((string)$description) !== '' ? trim((string)$description) : trim((string)($site['site_description'] ?? ''));
+    $metaUrl = request()->url(true);
+    $metaImage = '/assets/img/logo.png';
+    if (isset($product) && !empty($product['main_image'])) {
+        $metaImage = $product['main_image'];
+    }
+    if (strpos($metaImage, 'http://') !== 0 && strpos($metaImage, 'https://') !== 0) {
+        $metaImage = request()->domain() . (strpos($metaImage, '/') === 0 ? $metaImage : '/' . $metaImage);
+    }
+{/php}
+<title>{$metaTitle|htmlentities}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="renderer" content="webkit">
 
 {if isset($keywords)}
 <meta name="keywords" content="{$keywords|htmlentities}">
 {/if}
-{if isset($description)}
-<meta name="description" content="{$description|htmlentities}">
+{if $metaDescription}
+<meta name="description" content="{$metaDescription|htmlentities}">
+<meta property="og:description" content="{$metaDescription|htmlentities}">
+<meta name="twitter:description" content="{$metaDescription|htmlentities}">
 {/if}
+<meta property="og:title" content="{$metaTitle|htmlentities}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{$metaUrl|htmlentities}">
+<meta property="og:site_name" content="{$site.name|htmlentities}">
+<meta property="og:image" content="{$metaImage|htmlentities}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{$metaTitle|htmlentities}">
+<meta name="twitter:image" content="{$metaImage|htmlentities}">
 
 <link rel="shortcut icon" href="__CDN__/assets/img/favicon.ico" />
 

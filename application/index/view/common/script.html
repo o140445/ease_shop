@@ -75,5 +75,14 @@
             }
         });
     }, true);
+
+    document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('[data-shop-blocked-buy]');
+        if (!trigger) {
+            return;
+        }
+        event.preventDefault();
+        showShopToast(trigger.getAttribute('data-message') || "{:__('Unable to purchase')}", 'error');
+    }, true);
 })();
 </script>

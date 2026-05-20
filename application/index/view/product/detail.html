@@ -54,7 +54,7 @@
                     <div><span>{:__('Sales')}</span><strong>{$product.sales|htmlentities}</strong></div>
                 </div>
 
-                <form class="shop-detail-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                <form class="shop-detail-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}" data-ajax="1">
                     <input type="hidden" name="product_id" value="{$product.id}">
 
                     {if count($skus)>0}
@@ -113,7 +113,7 @@
                         <div class="shop-list-price">
                             <strong>{:__('Currency symbol')}{$item.display_price|htmlentities}</strong>
                             {if $item.display_market_price}<del>{:__('Currency symbol')}{$item.display_market_price|htmlentities}</del>{/if}
-                            <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                            <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}" data-ajax="1">
                                 <input type="hidden" name="product_id" value="{$item.id}">
                                 <button type="submit" aria-label="{:__('Add to cart')}"><i class="fa fa-shopping-cart"></i></button>
                             </form>

@@ -298,4 +298,8 @@ return [
     'Mobile' => '携帯番号',
     'Memo' => 'メモ',
     'Name' => '名前',
+    'Unable to purchase' => 'Unable to purchase',
+    'Added to cart' => 'Added to cart',
+    'Order created successfully' => 'Order created successfully',
+    'Already purchased, unable to purchase again' => 'Already purchased, unable to purchase again',
 ];

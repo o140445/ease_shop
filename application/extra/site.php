@@ -42,4 +42,6 @@ return array (
     'custom' => 'Custom',
   ),
   'customer' => 'https://t.me/CustomerService0089',
+  'single_item_limit' => '0',
+  'site_description' => 'Shop Ease is a secure online store for curated electronics, home essentials and lifestyle products, with member pricing, balance payment and reliable after-sales service.',
 );

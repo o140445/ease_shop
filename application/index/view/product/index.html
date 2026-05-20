@@ -82,7 +82,7 @@
                             <div class="shop-list-price">
                                 <strong>{:__('Currency symbol')}{$product.price|htmlentities}</strong>
                                 {if $product.market_price>0}<del>{:__('Currency symbol')}{$product.market_price|htmlentities}</del>{/if}
-                                <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}">
+                                <form class="shop-list-cart-form" method="post" action="{:url('cart/add', ['lang' => $shopLang])}" data-ajax="1">
                                     <input type="hidden" name="product_id" value="{$product.id}">
                                     <button type="submit" aria-label="{:__('Add to cart')}"><i class="fa fa-shopping-cart"></i></button>
                                 </form>

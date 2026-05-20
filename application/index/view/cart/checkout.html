@@ -64,7 +64,7 @@
                     <div class="shop-order-line"><span>{:__('Freight')}</span><strong>{:__('Currency symbol')}{$freightAmount|htmlentities}</strong></div>
                     <div class="shop-order-total"><span>{:__('Payable amount')}</span><strong>{:__('Currency symbol')}{$payAmount|htmlentities}</strong></div>
 
-                    <form method="post" action="{:url('cart/checkout', ['lang' => $shopLang])}">
+                    <form method="post" action="{:url('cart/checkout', ['lang' => $shopLang])}" data-ajax="1">
                         <button type="submit" class="shop-order-paybtn">{:__('Submit order')}</button>
                     </form>
                 </aside>

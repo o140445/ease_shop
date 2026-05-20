@@ -1515,6 +1515,14 @@ img { max-width: 100%; display: block; }
     font-weight: 800;
 }
 
+.shop-auth-tabs a:focus,
+.shop-auth-tabs a:focus-visible,
+.shop-auth-tabs a:active {
+    outline: 0 !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
 .shop-auth-tabs a.active {
     color: #e20718;
 }
@@ -1924,6 +1932,32 @@ img { max-width: 100%; display: block; }
     border-radius: 50%;
     background: #fff;
     color: #f10f1f;
+}
+
+.shop-list-card a:focus,
+.shop-list-card a:focus-visible,
+.shop-list-cart-form button:focus,
+.shop-list-cart-form button:focus-visible,
+.shop-list-filter a:focus,
+.shop-list-filter a:focus-visible,
+.shop-list-sort a:focus,
+.shop-list-sort a:focus-visible,
+.shop-list-order a:focus,
+.shop-list-order a:focus-visible,
+.shop-ease-section-head a:focus,
+.shop-ease-section-head a:focus-visible,
+.shop-detail-breadcrumb a:focus,
+.shop-detail-breadcrumb a:focus-visible,
+.shop-detail-thumbs button:focus,
+.shop-detail-thumbs button:focus-visible,
+.shop-detail-qty button:focus,
+.shop-detail-qty button:focus-visible,
+.shop-detail-primary:focus,
+.shop-detail-primary:focus-visible,
+.shop-detail-secondary:focus,
+.shop-detail-secondary:focus-visible {
+    outline: 0 !important;
+    box-shadow: none !important;
 }
 
 .shop-list-pagination {

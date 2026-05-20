@@ -318,4 +318,8 @@ return [
     'Order completed successfully' => 'تم إكمال الطلب بنجاح',
     'User confirmed receipt' => 'أكد المستخدم استلام الطلب',
     'Please contact customer service' => 'يرجى التواصل مع خدمة العملاء',
+    'Unable to purchase' => '无法购买',
+    'Added to cart' => 'تمت الإضافة إلى السلة',
+    'Order created successfully' => 'تم إنشاء الطلب بنجاح',
+    'Already purchased, unable to purchase again' => '已经购买，无法再次购买',
 ];

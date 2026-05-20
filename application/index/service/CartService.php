@@ -6,6 +6,13 @@ use think\Db;
 
 class CartService
 {
+    protected $purchaseLimit;
+
+    public function __construct()
+    {
+        $this->purchaseLimit = new PurchaseLimitService();
+    }
+
     public function getCartItems($userId)
     {
         $items = Db::name('shop_cart')->alias('cart')
@@ -31,6 +38,7 @@ class CartService
     {
         Db::startTrans();
         try {
+            $this->assertCanPurchase($userId);
             $product = Db::name('shop_product')->where('id', $productId)->where('status', 'normal')->lock(true)->find();
             if (!$product) {
                 throw new \Exception(__('Product not found'));
@@ -47,6 +55,13 @@ class CartService
                     throw new \Exception(__('Product specification does not exist'));
                 }
             }
+
+            $currentProductCartQuantity = (int)Db::name('shop_cart')
+                ->where('user_id', $userId)
+                ->where('product_id', $productId)
+                ->lock(true)
+                ->sum('quantity');
+            $this->purchaseLimit->assertProductCanBePurchased($userId, $productId, $currentProductCartQuantity + $quantity);
 
             $cart = Db::name('shop_cart')->where([
                 'user_id'    => $userId,
@@ -79,6 +94,17 @@ class CartService
         }
     }
 
+    protected function assertCanPurchase($userId)
+    {
+        $user = Db::name('shop_user')->where('id', (int)$userId)->where('status', 'normal')->lock(true)->find();
+        if (!$user) {
+            throw new \Exception(__('User does not exist'));
+        }
+        if ((float)($user['frozen_money'] ?? 0) > 0) {
+            throw new \Exception(__('Unable to purchase'));
+        }
+    }
+
     public function updateQuantity($userId, $cartId, $quantity)
     {
         Db::startTrans();
@@ -87,6 +113,14 @@ class CartService
             if (!$cart) {
                 throw new \Exception(__('Cart product does not exist'));
             }
+            $otherProductCartQuantity = (int)Db::name('shop_cart')
+                ->where('user_id', $userId)
+                ->where('product_id', (int)$cart['product_id'])
+                ->where('id', '<>', (int)$cart['id'])
+                ->lock(true)
+                ->sum('quantity');
+            $this->purchaseLimit->assertProductCanBePurchased($userId, (int)$cart['product_id'], $otherProductCartQuantity + $quantity);
+
             Db::name('shop_cart')->where('id', $cartId)->update([
                 'quantity'   => $quantity,
                 'updatetime' => time(),

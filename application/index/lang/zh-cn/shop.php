@@ -318,4 +318,8 @@ return [
     'Order completed successfully' => '订单已完成',
     'User confirmed receipt' => '用户确认收货',
     'Please contact customer service' => '请联系客服',
+    'Unable to purchase' => '无法购买',
+    'Added to cart' => '已加入购物车',
+    'Order created successfully' => '订单创建成功',
+    'Already purchased, unable to purchase again' => '已经购买，无法再次购买',
 ];

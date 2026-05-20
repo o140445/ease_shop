@@ -7,10 +7,12 @@ use think\Db;
 class OrderService
 {
     protected $financeLog;
+    protected $purchaseLimit;
 
     public function __construct()
     {
         $this->financeLog = new FinanceLogService();
+        $this->purchaseLimit = new PurchaseLimitService();
     }
 
     public function getCheckoutData($user)
@@ -18,6 +20,9 @@ class OrderService
         $user = Db::name('shop_user')->where('id', (int)$user['id'])->where('status', 'normal')->find();
         if (!$user) {
             throw new \Exception(__('User does not exist'));
+        }
+        if ((float)($user['frozen_money'] ?? 0) > 0) {
+            throw new \Exception(__('Unable to purchase'));
         }
         $items = Db::name('shop_cart')->alias('cart')
             ->join('__SHOP_PRODUCT__ product', 'product.id=cart.product_id AND product.status="normal"', 'INNER')
@@ -30,6 +35,7 @@ class OrderService
         if (!$items) {
             throw new \Exception(__('Your cart is empty'));
         }
+        $this->purchaseLimit->assertCartCanBePurchased($user['id'], $items);
 
         $productAmount = 0;
         $totalQuantity = 0;

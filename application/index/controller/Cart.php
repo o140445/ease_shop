@@ -38,6 +38,9 @@ class Cart extends Index
             $this->error($e->getMessage() ?: __('Order creation failed, please try again later'));
         }
 
+        if ($this->request->isAjax()) {
+            $this->success(__('Order created successfully'), url('order/detail', ['id' => $orderId, 'lang' => $this->shopLang]));
+        }
         $this->redirect('order/detail', ['id' => $orderId, 'lang' => $this->shopLang]);
     }
 
@@ -59,6 +62,9 @@ class Cart extends Index
             $this->error($e->getMessage());
         }
 
+        if ($this->request->isAjax()) {
+            $this->success(__('Added to cart'), url('cart/index', ['lang' => $this->shopLang]));
+        }
         $this->redirect('cart/index', ['lang' => $this->shopLang]);
     }
 

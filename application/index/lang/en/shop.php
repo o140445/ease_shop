@@ -318,4 +318,8 @@ return [
     'Order completed successfully' => 'Order completed successfully',
     'User confirmed receipt' => 'User confirmed receipt',
     'Please contact customer service' => 'Please contact customer service',
+    'Unable to purchase' => 'Unable to purchase',
+    'Added to cart' => 'Added to cart',
+    'Order created successfully' => 'Order created successfully',
+    'Already purchased, unable to purchase again' => 'Already purchased, unable to purchase again',
 ];

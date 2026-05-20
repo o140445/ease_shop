@@ -77,7 +77,11 @@
                     <span>{:__('Payable total')}</span>
                     <strong>{:__('Currency symbol')}{$total|htmlentities}</strong>
                 </div>
+                {if isset($user.frozen_money) && $user.frozen_money > 0}
+                <a href="javascript:;" class="shop-cart-checkout" data-shop-blocked-buy data-message="{:__('Unable to purchase')|htmlentities}">{:__('Checkout')}</a>
+                {else /}
                 <a href="{:url('cart/checkout', ['lang' => $shopLang])}" class="shop-cart-checkout">{:__('Checkout')}</a>
+                {/if}
                 <p>{:__('Confirm order information in the next step. No order will be created immediately.')}</p>
             </aside>
         </section>
